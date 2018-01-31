@@ -4,15 +4,15 @@ Resources:
     CreateFunction:
         Type: AWS::Serverless::Function
         Properties:
-           Handler: TimelineLite::TimelineLite.Function::FunctionHandler
+           Handler: TimelineLite::TimelineLite.Timeline::Create
            Runtime: dotnetcore2.0
            CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
            Events:
              GetResource:
                Type: Api
                Properties:
-                 Path: /test
-                 Method: get
+                 Path: /Timeline/Create
+                 Method: put
 
     TimelineStorage:
       Type: AWS::DynamoDB::Table
