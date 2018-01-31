@@ -3,6 +3,7 @@ using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using Newtonsoft.Json;
 using TimelineLite.Requests;
 using TimelineLite.StorageModels;
 using static TimelineLite.Requests.RequestHelper;
@@ -15,25 +16,40 @@ namespace TimelineLite
 {
     public class Timeline
     {
-        public APIGatewayProxyResponse Create(APIGatewayProxyRequest input, ILambdaContext context)
+        public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            var request = ParseRequestBody<CreateTimelineRequest>(input);
+            var createTimelineRequest = ParseRequestBody<CreateTimelineRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(request.TimelineId))
+            if (string.IsNullOrWhiteSpace(createTimelineRequest.TimelineId))
                 return WrapResponse("Invalid Timeline Id", 400);
-            if (string.IsNullOrWhiteSpace(request.Title))
+            if (string.IsNullOrWhiteSpace(createTimelineRequest.Title))
                 return WrapResponse("Invalid Timeline Title ", 400);
 
-            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1));
+            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), createTimelineRequest.TenantId);
             var timeline = new TimelineModel
             {
-                Id = request.TimelineId,
-                Title = request.Title,
+                Id = createTimelineRequest.TimelineId,
+                Title = createTimelineRequest.Title,
                 CreationTimeStamp = DateTime.Now.Ticks.ToString(),
                 IsDeleted = false
             };
             repo.CreateTimline(timeline);
-            return WrapResponse($"{request.TenantId} {request.TimelineId} {request.Title}");
+            return WrapResponse($"{createTimelineRequest.TenantId} {createTimelineRequest.TimelineId} {createTimelineRequest.Title}");
+        }
+        
+        public APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            var editTimelineTitleRequest = ParseRequestBody<CreateTimelineRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
+                return WrapResponse("Invalid Timeline Id", 400);
+            if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.Title))
+                return WrapResponse("Invalid Timeline Title ", 400);
+
+            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), editTimelineTitleRequest.TenantId);
+            var model = repo.GetModel(editTimelineTitleRequest.TimelineId);
+            
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
     }
 }

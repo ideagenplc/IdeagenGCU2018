@@ -3,10 +3,9 @@
 namespace TimelineLite.StorageModels
 {
     [DynamoDBTable("TimelineStore")]
-    public class TimelineModel
+    public class TimelineModel : BaseModel
     {
-        [DynamoDBHashKey]
-        public string Id { get; set; }
+        
         public string Title { get; set; }
         public string CreationTimeStamp { get; set; }
         public bool IsDeleted { get; set; }
