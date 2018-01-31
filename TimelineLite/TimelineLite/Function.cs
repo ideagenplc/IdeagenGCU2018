@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
+using TimelineLite.Requests;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -27,19 +28,12 @@ namespace TimelineLite
             
             var t = input.Body;
             Console.WriteLine(input.Body);
-            var test = JsonConvert.DeserializeObject<TestClass>(body);
+            var request = RequestHelper.ParseRequestBody<CreateTimelineRequest>(input);
             Console.WriteLine(body);
             var response = new APIGatewayProxyResponse();
             response.StatusCode = 200;
-            response.Body = $"{body} {test.TimelineId}";
+            response.Body = $"{body} {request.TimelineId}";
             return response;
         }
-    }
-
-    public class TestClass
-    {
-        public string TenantId;
-        public string AuthToken;
-        public string TimelineId;
     }
 }
