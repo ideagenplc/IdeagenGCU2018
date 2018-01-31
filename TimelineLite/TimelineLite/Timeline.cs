@@ -1,4 +1,6 @@
 using System;
+using Amazon;
+using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using TimelineLite.Requests;
@@ -22,6 +24,7 @@ namespace TimelineLite
             if (string.IsNullOrWhiteSpace(request.Title))
                 return WrapResponse("Invalid Timeline Title ", 400);
 
+            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1));
             var timeline = new TimelineModel
             {
                 Id = request.TimelineId,
@@ -29,9 +32,8 @@ namespace TimelineLite
                 CreationTimeStamp = DateTime.Now.Ticks.ToString(),
                 IsDeleted = false
             };
-            
-            
-            return WrapResponse($"{request.TenantId} {request.TimelineId} {request.Title} {request.AuthToken}");
+            repo.CreateTimline(timeline);
+            return WrapResponse($"{request.TenantId} {request.TimelineId} {request.Title}");
         }
     }
 }

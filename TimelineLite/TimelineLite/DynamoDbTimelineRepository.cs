@@ -17,7 +17,7 @@ namespace TimelineLite
 
         public void CreateTimline(TimelineModel model)
         {
-            _context.SaveAsync(model);
+            _context.SaveAsync(model).Wait();
         }
     }
 }
