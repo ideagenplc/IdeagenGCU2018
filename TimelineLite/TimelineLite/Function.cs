@@ -25,7 +25,6 @@ namespace TimelineLite
             var tenantId = "TestTenant";
             var authToken = "TestAuthToken";
             var body = input.Body;
-            
             var t = input.Body;
             Console.WriteLine(input.Body);
             var request = RequestHelper.ParseRequestBody<CreateTimelineRequest>(input);

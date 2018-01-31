@@ -17,12 +17,6 @@ namespace TimelineLite
         /// <returns></returns>
         public APIGatewayProxyResponse CreateTimelineEvent(APIGatewayProxyRequest input, ILambdaContext context)
         {
-            // AmazonDynamoDBClient dynamoDbClient = new AmazonDynamoDBClient();
-
-            using (var dynamoDbClient = new AmazonDynamoDBClient(RegionEndpoint.EUWest1))
-            {
-                dynamoDbClient.PutItemAsync()
-            }
             
             var tenantId = "TestTenant";
             var authToken = "TestAuthToken";
@@ -30,7 +24,7 @@ namespace TimelineLite
             
             var t = input.Body;
             Console.WriteLine(input.Body);
-            var test = JsonConvert.DeserializeObject<TestClass>(body);
+           // var test = JsonConvert.DeserializeObject<TestClass>(body);
             Console.WriteLine(body);
             var response = new APIGatewayProxyResponse();
             response.StatusCode = 200;
