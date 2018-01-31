@@ -4,6 +4,10 @@ using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
+using TimelineLite.Requests.TimelineEvents;
+using TimelineLite.StorageModels;
+using static TimelineLite.Requests.RequestHelper;
+using static TimelineLite.Responses.ResponseHelper;
 
 namespace TimelineLite
 {
@@ -15,21 +19,29 @@ namespace TimelineLite
         /// <param name="input"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public APIGatewayProxyResponse CreateTimelineEvent(APIGatewayProxyRequest input, ILambdaContext context)
+        public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            
-            var tenantId = "TestTenant";
-            var authToken = "TestAuthToken";
-            var body = input.Body;
-            
-            var t = input.Body;
-            Console.WriteLine(input.Body);
-            // var test = JsonConvert.DeserializeObject<TestClass>(body);
-            Console.WriteLine(body);
-            var response = new APIGatewayProxyResponse();
-            response.StatusCode = 200;
-          //  response.Body = $"{body} {test.TimelineId}";
-            return response;
+            var createTimelineEventRequest = ParseRequestBody<CreateTimelineEventRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(createTimelineEventRequest.TimelineEventId))
+                return WrapResponse("Invalid Timeline Event Id", 400);
+            if (string.IsNullOrWhiteSpace(createTimelineEventRequest.Title))
+                return WrapResponse("Invalid Timeline Event Title ", 400);
+            if (string.IsNullOrWhiteSpace(createTimelineEventRequest.Description))
+                return WrapResponse("Invalid Timeline Event Description ", 400);
+            if (string.IsNullOrWhiteSpace(createTimelineEventRequest.EventDateTime))
+                return WrapResponse("Invalid Timeline Event Date Time ", 400);
+
+            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1));
+            var timeline = new TimelineEventModel
+            {
+                Id = createTimelineEventRequest.TimelineEventId,
+                Title = createTimelineEventRequest.Title,
+                EventDateTime = createTimelineEventRequest.EventDateTime,
+                Description = createTimelineEventRequest.Description
+            };
+            repo.CreateTimline(timeline);
+            return WrapResponse($"{request.TenantId} {request.TimelineId} {request.Title}");
         }
     }
 }
