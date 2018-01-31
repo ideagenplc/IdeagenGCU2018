@@ -1,6 +1,8 @@
+using System;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using TimelineLite.Requests;
+using TimelineLite.StorageModels;
 using static TimelineLite.Requests.RequestHelper;
 using static TimelineLite.Responses.ResponseHelper;
 
@@ -14,6 +16,21 @@ namespace TimelineLite
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest input, ILambdaContext context)
         {
             var request = ParseRequestBody<CreateTimelineRequest>(input);
+
+            if (string.IsNullOrWhiteSpace(request.TimelineId))
+                return WrapResponse("Invalid Timeline Id", 400);
+            if (string.IsNullOrWhiteSpace(request.Title))
+                return WrapResponse("Invalid Timeline Title ", 400);
+
+            var timeline = new TimelineModel
+            {
+                Id = request.TimelineId,
+                Title = request.Title,
+                CreationTimeStamp = DateTime.Now.Ticks.ToString(),
+                IsDeleted = false
+            };
+            
+            
             return WrapResponse($"{request.TenantId} {request.TimelineId} {request.Title} {request.AuthToken}");
         }
     }
