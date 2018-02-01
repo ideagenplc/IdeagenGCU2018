@@ -47,9 +47,9 @@ namespace TimelineLite
                 return WrapResponse("Invalid Timeline Event Title ", 400);
 
             var repo = GetRepo(timelineEventRequest.TenantId);
-            var model = repo.GetModel(timelineEventRequest.TimelineEventId);
+            var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.Title = timelineEventRequest.Title;
-            repo.SaveModel(model);
+            repo.SaveTimelineEventModel(model);
             return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.Title}");
         }
         
@@ -63,9 +63,9 @@ namespace TimelineLite
                 return WrapResponse("Invalid Timeline Event Description", 400);
             
             var repo = GetRepo(timelineEventRequest.TenantId);
-            var model = repo.GetModel(timelineEventRequest.TimelineEventId);
+            var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.Description = timelineEventRequest.Desciption;
-            repo.SaveModel(model);
+            repo.SaveTimelineEventModel(model);
             return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.Desciption}");
         }
         
@@ -79,9 +79,9 @@ namespace TimelineLite
                 return WrapResponse("Invalid Timeline Event Date Time", 400);
             
             var repo = GetRepo(timelineEventRequest.TenantId);
-            var model = repo.GetModel(timelineEventRequest.TimelineEventId);
+            var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.EventDateTime = timelineEventRequest.EventDateTime;
-            repo.SaveModel(model);
+            repo.SaveTimelineEventModel(model);
             return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.EventDateTime}");
         }
         
@@ -93,10 +93,69 @@ namespace TimelineLite
                 return WrapResponse("Invalid Timeline Event Id", 400);
             
             var repo = GetRepo(timelineEventRequest.TenantId);
-            var model = repo.GetModel(timelineEventRequest.TimelineEventId);
+            var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.IsDeleted = true;
-            repo.SaveModel(model);
+            repo.SaveTimelineEventModel(model);
             return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId}");
+        }
+        
+        public APIGatewayProxyResponse LinkEvents(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            var timelineEventRequest = ParseRequestBody<LinkTimelineEventToTimelineEventRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
+                 return WrapResponse("Invalid Timeline Event Id", 400);
+            if (string.IsNullOrWhiteSpace(timelineEventRequest.LinkedToTimelineEventId))
+                return WrapResponse("Invalid Linked to Timeline Event Id", 400);
+            
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
+            var linkedTomodel = repo.GetTimelineEventModel(timelineEventRequest.LinkedToTimelineEventId);
+            
+            repo.SaveTimelineEventLinkedModel(new TimelineEventLinkModel {Id = Guid.NewGuid().ToString(), TimelineEventId = model.Id, LinkedToTimelineEventId = linkedTomodel.Id });
+
+            return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.LinkedToTimelineEventId}");
+        }
+        
+        public APIGatewayProxyResponse UnlinkEvents(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            var timelineEventRequest = ParseRequestBody<UnlinkTimelineEventToTimelineEventRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
+                return WrapResponse("Invalid Timeline Event Id", 400);
+            if (string.IsNullOrWhiteSpace(timelineEventRequest.UnlinkedFromTimelineEventId))
+                return WrapResponse("Invalid Unlinked from Timeline Event Id", 400);
+            
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            var eventModel = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
+            var unlinkedFromEventModel = repo.GetTimelineEventModel(timelineEventRequest.UnlinkedFromTimelineEventId);
+
+            var timelineEventLinkedModel = repo.GetTimelineEventLinkModel(eventModel.Id, unlinkedFromEventModel.Id);
+            timelineEventLinkedModel.IsDeleted = true;
+            repo.SaveTimelineEventLinkedModel(timelineEventLinkedModel);
+
+            return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.UnlinkedFromTimelineEventId}");
+        }
+
+        public APIGatewayProxyResponse GetLinkedTimelineEvents(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            var timelineEventRequest = ParseRequestBody<GetTimelineEventLinksRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
+                return WrapResponse("Invalid Timeline Event Id", 400);
+
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            //var eventModel = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
+            var timelineEventLinkedModel = repo.GetTimelineEventLinks(timelineEventRequest.TimelineEventId, timelineEventRequest.skip);
+            
+            Console.WriteLine($"Skipping: {timelineEventRequest.skip}");
+            Console.WriteLine("Returning linked timeline events");
+            foreach (var linkedModel in timelineEventLinkedModel)
+            {
+                Console.WriteLine(linkedModel);
+            }
+
+            return WrapResponse(timelineEventLinkedModel);
         }
 
         private static DynamoDbTimelineEventRepository GetRepo(string tenantId)

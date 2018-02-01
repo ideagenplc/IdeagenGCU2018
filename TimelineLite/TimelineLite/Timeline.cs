@@ -69,9 +69,9 @@ namespace TimelineLite
             var createTimelineRequest = ParseRequestBody<CreateTimelineRequest>(request);
 
             if (string.IsNullOrWhiteSpace(createTimelineRequest.TimelineId))
-                return WrapResponse("Invalid Timeline Id", 400);
+                throw new ValidationException("Invalid Timeline Id");
             if (string.IsNullOrWhiteSpace(createTimelineRequest.Title))
-                return WrapResponse("Invalid Timeline Title ", 400);
+                throw new ValidationException("Invalid Timeline Title");
 
             var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
                 createTimelineRequest.TenantId);
@@ -121,56 +121,57 @@ namespace TimelineLite
         
         private static APIGatewayProxyResponse LinkEventToTimeline(APIGatewayProxyRequest request)
         {
-            var linkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
+//            var linkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
+//
+//            if (string.IsNullOrWhiteSpace(linkRequest.TimelineId))
+//                return WrapResponse("Invalid Timeline Id", 400);
+//            if (string.IsNullOrWhiteSpace(linkRequest.EventId))
+//                return WrapResponse("Invalid Event Id", 400);
+//
+//            var timelineRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+//                linkRequest.TenantId);
+//            var linkRepo = new DynamoDbTimelineEventLinkRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+//                linkRequest.TenantId);
+//            var model = timelineRepo.GetModel(linkRequest.TimelineId);
+//            var linkModel = new TimelineEventLinkModel
+//            {
+//                EventId = linkRequest.EventId,
+//                TimelineId = model.Id,
+//                Id = Guid.NewGuid().ToString()
+//            };
 
-            if (string.IsNullOrWhiteSpace(linkRequest.TimelineId))
-                return WrapResponse("Invalid Timeline Id", 400);
-            if (string.IsNullOrWhiteSpace(linkRequest.EventId))
-                return WrapResponse("Invalid Event Id", 400);
-
-            var timelineRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
-                linkRequest.TenantId);
-            var linkRepo = new DynamoDbTimelineEventLinkRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
-                linkRequest.TenantId);
-            var model = timelineRepo.GetModel(linkRequest.TimelineId);
-            var linkModel = new TimelineEventLinkModel
-            {
-                EventId = linkRequest.EventId,
-                TimelineId = model.Id,
-                Id = Guid.NewGuid().ToString()
-            };
-
-            linkRepo.CreateLink(linkModel);
-            return WrapResponse($"{JsonConvert.SerializeObject(linkModel)}");
+            //linkRepo.CreateLink(linkModel);
+            return WrapResponse($"OK");
         }
         
         private static APIGatewayProxyResponse UnlinkEventFromTimeline(APIGatewayProxyRequest request)
         {
-            var unlinkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
-
-            if (string.IsNullOrWhiteSpace(unlinkRequest.TimelineId))
-                return WrapResponse("Invalid Timeline Id", 400);
-            if (string.IsNullOrWhiteSpace(unlinkRequest.EventId))
-                return WrapResponse("Invalid Event Id", 400);
-
-            var linkRepo = new DynamoDbTimelineEventLinkRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
-                unlinkRequest.TenantId);
-
-            linkRepo.DeleteLink(unlinkRequest.TimelineId, unlinkRequest.EventId);
+//            var unlinkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
+//
+//            if (string.IsNullOrWhiteSpace(unlinkRequest.TimelineId))
+//                return WrapResponse("Invalid Timeline Id", 400);
+//            if (string.IsNullOrWhiteSpace(unlinkRequest.EventId))
+//                return WrapResponse("Invalid Event Id", 400);
+//
+//            var linkRepo = new DynamoDbTimelineEventLinkRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+//                unlinkRequest.TenantId);
+//
+//            linkRepo.DeleteLink(unlinkRequest.TimelineId, unlinkRequest.EventId);
             return WrapResponse($"OK");
         }
         
         private static APIGatewayProxyResponse GetLinkedEvents(APIGatewayProxyRequest request)
         {
-            var getLinkedEventsRequest = ParseRequestBody<GetEventsOnTimelineRequest>(request);
-
-            if (string.IsNullOrWhiteSpace(getLinkedEventsRequest.TimelineId))
-                return WrapResponse("Invalid Timeline Id", 400);
-
-            var linkRepo = new DynamoDbTimelineEventLinkRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
-                getLinkedEventsRequest.TenantId);
-            var events = linkRepo.GetLinks(getLinkedEventsRequest.TimelineId,
-                request.PathParameters["pageToken"] ?? string.Empty);
+//            var getLinkedEventsRequest = ParseRequestBody<GetEventsOnTimelineRequest>(request);
+//
+//            if (string.IsNullOrWhiteSpace(getLinkedEventsRequest.TimelineId))
+//                return WrapResponse("Invalid Timeline Id", 400);
+//
+//            var linkRepo = new DynamoDbTimelineEventLinkRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+//                getLinkedEventsRequest.TenantId);
+//            var events = linkRepo.GetLinks(getLinkedEventsRequest.TimelineId,
+//                request.PathParameters["pageToken"] ?? string.Empty);
+//            return WrapResponse($"OK");
             return WrapResponse($"OK");
         }
 

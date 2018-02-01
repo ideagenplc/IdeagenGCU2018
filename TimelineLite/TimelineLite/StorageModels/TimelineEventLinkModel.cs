@@ -5,7 +5,9 @@ namespace TimelineLite.StorageModels
     [DynamoDBTable("TimelineEventLinkStore")]
     public class TimelineEventLinkModel : BaseModel
     {
-        public string TimelineId { get; set; }
-        public string EventId { get; set; }
+        [DynamoDBGlobalSecondaryIndexRangeKey("TimelineEventId-Index")]
+        public string TimelineEventId { get; set; }
+        public string LinkedToTimelineEventId { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
