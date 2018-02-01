@@ -55,6 +55,24 @@ Resources:
                Properties:
                  Path: /Timeline/Delete
                  Method: put
+    GetFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite::TimelineLite.TimelineEvent::GetLinkedTimelineEvents
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess             
+           Timeout: 15
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEvent/GetLinkedTimelineEvents
+                 Method: put
 
     TimelineStorage:
       Type: AWS::DynamoDB::Table
@@ -85,15 +103,38 @@ Resources:
             -
               AttributeName: Id
               AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
+            -
+              AttributeName: TimelineEventId
+              AttributeType: S
         KeySchema:
             -
-              AttributeName: Id
+              AttributeName: TenantId
               KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
+        
+        GlobalSecondaryIndexes:
+            -
+                IndexName: TimelineEventId-Index
+                KeySchema:
+                    -
+                        AttributeName: TimelineEventId
+                        KeyType: HASH
+                Projection:
+                    ProjectionType: ALL
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 5
+                    WriteCapacityUnits: 5
+                    
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+          
         TableName: "TimelineEventLinkStore"
-
     EventStorage:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -101,14 +142,20 @@ Resources:
             -
               AttributeName: Id
               AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
         KeySchema:
             -
-              AttributeName: Id
+              AttributeName: TenantId
               KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
-        TableName: "TimelineEventsStore"
+        TableName: "TimelineEventStore"
 
     EventAttachmentLinkStorage:
       Type: AWS::DynamoDB::Table

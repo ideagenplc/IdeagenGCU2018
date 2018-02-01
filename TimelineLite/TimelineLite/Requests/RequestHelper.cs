@@ -30,11 +30,8 @@ namespace TimelineLite.Requests
             var response = _simpleDbClient.GetAttributesAsync(simpleDbrequest).Result;
             var authToken = response.Attributes.Single(x => x.Name == "Auth_Token").Value;
             if (authToken == request.AuthToken)
-            return request;
-            else
-            {
-                throw new Exception("Invalid Authorisation Token");
-            }
+                return request;
+            throw new Exception("Invalid Authorisation Token");
         }
         
         public static AuthorisationDetails GetAuthorisationDetails(this BaseRequest request)
