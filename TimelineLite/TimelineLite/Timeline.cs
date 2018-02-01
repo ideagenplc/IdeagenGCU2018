@@ -48,6 +48,7 @@ namespace TimelineLite
 
             var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), editTimelineTitleRequest.TenantId);
             var model = repo.GetModel(editTimelineTitleRequest.TimelineId);
+            model.Title = editTimelineTitleRequest.Title;
             repo.SaveModel(model);
             return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
@@ -62,7 +63,6 @@ namespace TimelineLite
             var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), editTimelineTitleRequest.TenantId);
             var model = repo.GetModel(editTimelineTitleRequest.TimelineId);
             model.IsDeleted = true;
-            
             repo.SaveModel(model);
             return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }

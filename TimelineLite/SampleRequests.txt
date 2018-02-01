@@ -1,0 +1,13 @@
+{
+    "TenantId":"123",
+    "AuthToken":"456",
+    "TimelineId":"1337",
+    "Title":"Timeline 13 37"
+} // Create Timeline
+
+{
+    "TenantId":"123",
+    "AuthToken":"456",
+    "TimelineId":"1337",
+    "Title":"New Title 2"
+} // Update Title
