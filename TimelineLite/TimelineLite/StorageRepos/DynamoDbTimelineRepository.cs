@@ -20,7 +20,7 @@ namespace TimelineLite
             _context = new DynamoDBContext(_client);
         }
 
-        public void CreateTimline(TimelineModel model)
+        public void CreateTimeline(TimelineModel model)
         {
             model.TenantId = _tenantId;
             _context.SaveAsync(model).Wait();

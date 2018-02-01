@@ -12,8 +12,8 @@ namespace TimelineLite.Requests
 {
     public static class RequestHelper
     {
-        private static IAmazonSimpleDB _simpleDbClient;
-        private static string _tableName = "GCUProject-Config";
+        private static readonly IAmazonSimpleDB _simpleDbClient;
+        private static readonly string _tableName = "GCUProject-Config";
         static RequestHelper()
         {
             _simpleDbClient = new AmazonSimpleDBClient(RegionEndpoint.EUWest1);
@@ -26,25 +26,30 @@ namespace TimelineLite.Requests
 
         private static T AuthoriseRequest<T>(this T request) where T : BaseRequest
         {
-            var simpleDbrequest = new GetAttributesRequest(_tableName, request.TenantId);
-            var response = _simpleDbClient.GetAttributesAsync(simpleDbrequest).Result;
-            var authToken = response.Attributes.Single(x => x.Name == "Auth_Token").Value;
+            var authToken = GetAuthToken(request);
+            
             if (authToken == request.AuthToken)
             return request;
             else
             {
-                throw new Exception("Invalid Authorisation Token");
+                throw new AuthenticationException($"Invalid Authorisation Token: {request.AuthToken}");
             }
         }
-        
-        public static AuthorisationDetails GetAuthorisationDetails(this BaseRequest request)
+
+        private static string GetAuthToken<T>(T request) where T : BaseRequest
         {
-            var details = new AuthorisationDetails
+            string authToken;
+            try
             {
-                TenantId = request.TenantId,
-                AuthToken = request.AuthToken
-            };
-            return details;
+                var simpleDbrequest = new GetAttributesRequest(_tableName, request.TenantId);
+                var response = _simpleDbClient.GetAttributesAsync(simpleDbrequest).Result;
+                authToken = response.Attributes.Single(x => x.Name == "Auth_Token").Value;
+            }
+            catch (Exception)
+            {
+                throw new AuthenticationException($"Error retrieving authentication token. Is {request.TenantId} a valid tenantId?");
+            }
+            return authToken;
         }
     }
 }
