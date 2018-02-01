@@ -7,11 +7,26 @@ Resources:
            Handler: TimelineLite::TimelineLite.Timeline::Create
            Runtime: dotnetcore2.0
            CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies: AmazonDynamoDBFullAccess
            Events:
              GetResource:
                Type: Api
                Properties:
                  Path: /Timeline/Create
+                 Method: put
+    EditTitleFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite::TimelineLite.Timeline::EditTitle
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies: AmazonDynamoDBFullAccess
+           Timeout: 15
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /Timeline/Edit
                  Method: put
 
     TimelineStorage:
@@ -21,10 +36,16 @@ Resources:
             -
               AttributeName: Id
               AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
         KeySchema:
             -
-              AttributeName: Id
+              AttributeName: TenantId
               KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5

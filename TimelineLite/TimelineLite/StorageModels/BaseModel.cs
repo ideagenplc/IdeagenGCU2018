@@ -4,7 +4,7 @@ namespace TimelineLite.StorageModels
 {
     public class BaseModel
     {
-        [DynamoDBHashKey]
+        [DynamoDBRangeKey]
         public string Id { get; set; }
         [DynamoDBHashKey]
         public string TenantId { get; set; }
