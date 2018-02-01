@@ -39,7 +39,7 @@ namespace TimelineLite
         
         public APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            var editTimelineTitleRequest = ParseRequestBody<CreateTimelineRequest>(request);
+            var editTimelineTitleRequest = ParseRequestBody<EditTimelineTitleRequest>(request);
 
             if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
                 return WrapResponse("Invalid Timeline Id", 400);
@@ -48,7 +48,71 @@ namespace TimelineLite
 
             var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), editTimelineTitleRequest.TenantId);
             var model = repo.GetModel(editTimelineTitleRequest.TimelineId);
+            repo.SaveModel(model);
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
+        }
+        
+        public APIGatewayProxyResponse Delete(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            var editTimelineTitleRequest = ParseRequestBody<DeleteTimelineRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
+                return WrapResponse("Invalid Timeline Id", 400);
+
+            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), editTimelineTitleRequest.TenantId);
+            var model = repo.GetModel(editTimelineTitleRequest.TimelineId);
+            model.IsDeleted = true;
             
+            repo.SaveModel(model);
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
+        }
+        
+        public APIGatewayProxyResponse LinkEvent(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            var editTimelineTitleRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
+                return WrapResponse("Invalid Timeline Id", 400);
+            if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.EventId))
+                return WrapResponse("Invalid Event Id", 400);
+
+            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), editTimelineTitleRequest.TenantId);
+            var model = repo.GetModel(editTimelineTitleRequest.TimelineId);
+            model.IsDeleted = true;
+            
+            repo.SaveModel(model);
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
+        }
+
+        public APIGatewayProxyResponse UnlinkEvent(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            var editTimelineTitleRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
+                return WrapResponse("Invalid Timeline Id", 400);
+            if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.EventId))
+                return WrapResponse("Invalid Event Id", 400);
+
+            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), editTimelineTitleRequest.TenantId);
+            var model = repo.GetModel(editTimelineTitleRequest.TimelineId);
+            model.IsDeleted = true;
+            
+            repo.SaveModel(model);
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
+        }
+        
+        public APIGatewayProxyResponse GetEvents(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            var editTimelineTitleRequest = ParseRequestBody<GetEventsOnTimelineRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
+                return WrapResponse("Invalid Timeline Id", 400);
+
+            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), editTimelineTitleRequest.TenantId);
+            var model = repo.GetModel(editTimelineTitleRequest.TimelineId);
+            model.IsDeleted = true;
+            
+            repo.SaveModel(model);
             return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
     }

@@ -23,6 +23,7 @@ namespace TimelineLite
 
         public void CreateTimline(TimelineModel model)
         {
+            model.TenantId = _tenantId;
             _context.SaveAsync(model).Wait();
         }
         
@@ -36,6 +37,10 @@ namespace TimelineLite
             
             return _context.ScanAsync<TimelineModel>(conditions).GetRemainingAsync().Result.Single();
         }
-    
+
+        public void SaveModel(TimelineModel model)
+        {
+            _context.SaveAsync(model);
+        }
     }
 }
