@@ -7,7 +7,12 @@ Resources:
            Handler: TimelineLite::TimelineLite.Timeline::Create
            Runtime: dotnetcore2.0
            CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
-           Policies: AmazonDynamoDBFullAccess
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+           Timeout: 15
            Events:
              GetResource:
                Type: Api
@@ -20,13 +25,35 @@ Resources:
            Handler: TimelineLite::TimelineLite.Timeline::EditTitle
            Runtime: dotnetcore2.0
            CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
-           Policies: AmazonDynamoDBFullAccess
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
            Timeout: 15
            Events:
              GetResource:
                Type: Api
                Properties:
                  Path: /Timeline/Edit
+                 Method: put
+    DeleteFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite::TimelineLite.Timeline::Delete
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess             
+           Timeout: 15
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /Timeline/Delete
                  Method: put
 
     TimelineStorage:

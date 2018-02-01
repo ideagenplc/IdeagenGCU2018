@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
@@ -32,7 +31,8 @@ namespace TimelineLite
             var conditions = new List<ScanCondition>
             {
                 new ScanCondition(nameof(TimelineModel.Id), ScanOperator.Equal, id),
-                new ScanCondition(nameof(TimelineModel.TenantId), ScanOperator.Equal, _tenantId)
+                new ScanCondition(nameof(TimelineModel.TenantId), ScanOperator.Equal, _tenantId),
+                new ScanCondition(nameof(TimelineModel.IsDeleted), ScanOperator.Equal, false)
             };
             
             return _context.ScanAsync<TimelineModel>(conditions).GetRemainingAsync().Result.Single();
