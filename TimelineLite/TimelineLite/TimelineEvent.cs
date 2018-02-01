@@ -46,7 +46,10 @@ namespace TimelineLite
             if (string.IsNullOrWhiteSpace(timelineEventRequest.Title))
                 return WrapResponse("Invalid Timeline Event Title ", 400);
 
-            GetRepo(timelineEventRequest.TenantId).EditTimelineEventTitle(timelineEventRequest.TimelineEventId, timelineEventRequest.Title);
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            var model = repo.GetModel(timelineEventRequest.TimelineEventId);
+            model.Title = timelineEventRequest.Title;
+            repo.SaveModel(model);
             return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.Title}");
         }
         
@@ -58,8 +61,11 @@ namespace TimelineLite
                 return WrapResponse("Invalid Timeline Event Id", 400);
             if (string.IsNullOrWhiteSpace(timelineEventRequest.Desciption))
                 return WrapResponse("Invalid Timeline Event Description", 400);
-
-            GetRepo(timelineEventRequest.TenantId).EditTimelineEventDescription(timelineEventRequest.TimelineEventId, timelineEventRequest.Desciption);
+            
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            var model = repo.GetModel(timelineEventRequest.TimelineEventId);
+            model.Description = timelineEventRequest.Desciption;
+            repo.SaveModel(model);
             return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.Desciption}");
         }
         
@@ -71,8 +77,11 @@ namespace TimelineLite
                 return WrapResponse("Invalid Timeline Event Id", 400);
             if (string.IsNullOrWhiteSpace(timelineEventRequest.EventDateTime))
                 return WrapResponse("Invalid Timeline Event Date Time", 400);
-
-            GetRepo(timelineEventRequest.TenantId).EditTimelineEventDateTime(timelineEventRequest.TimelineEventId, timelineEventRequest.EventDateTime);
+            
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            var model = repo.GetModel(timelineEventRequest.TimelineEventId);
+            model.EventDateTime = timelineEventRequest.EventDateTime;
+            repo.SaveModel(model);
             return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.EventDateTime}");
         }
         
@@ -82,8 +91,11 @@ namespace TimelineLite
 
             if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
                 return WrapResponse("Invalid Timeline Event Id", 400);
-
-            GetRepo(timelineEventRequest.TenantId).DeleteTimelineEvent(timelineEventRequest.TimelineEventId);
+            
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            var model = repo.GetModel(timelineEventRequest.TimelineEventId);
+            model.IsDeleted = true;
+            repo.SaveModel(model);
             return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId}");
         }
 

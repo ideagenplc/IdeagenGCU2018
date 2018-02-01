@@ -25,26 +25,6 @@ namespace TimelineLite
         {
             _context.SaveAsync(model).Wait();
         }
-
-        public void EditTimelineEventTitle(string timelineId, string title)
-        {
-            
-        }
-        
-        public void EditTimelineEventDescription(string timelineId, string description)
-        {
-            
-        }
-        
-        public void EditTimelineEventDateTime(string timelineId, string eventDateTime)
-        {
-            
-        }
-                
-        public void DeleteTimelineEvent(string timelineId)
-        {
-            
-        }
         
         public TimelineEventModel GetModel(string id)
         {
@@ -56,6 +36,10 @@ namespace TimelineLite
             
             return _context.ScanAsync<TimelineEventModel>(conditions).GetRemainingAsync().Result.Single();
         }
-    
+
+        public void SaveModel(TimelineEventModel model)
+        {
+            _context.SaveAsync(model);
+        }
     }
 }

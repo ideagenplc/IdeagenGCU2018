@@ -26,35 +26,20 @@ namespace TimelineLite
             _context.SaveAsync(model).Wait();
         }
 
-        public void EditTimelineEventTitle(string timelineId, string title)
-        {
-            
-        }
-        
-        public void EditTimelineEventDescription(string timelineId, string description)
-        {
-            
-        }
-        
-        public void EditTimelineEventDateTime(string timelineId, string eventDateTime)
-        {
-            
-        }
-                
-        public void DeleteTimelineEventDateTime(string timelineId, string eventDateTime)
-        {
-            
-        }
-        
-        public TimelineEventModel GetModel(string id)
+        public TimelineEventAttachmentModel GetModel(string id)
         {
             var conditions = new List<ScanCondition>
             {
-                new ScanCondition(nameof(TimelineEventModel.Id), ScanOperator.Equal, id),
-                new ScanCondition(nameof(TimelineEventModel.TenantId), ScanOperator.Equal, _tenantId)
+                new ScanCondition(nameof(TimelineEventAttachmentModel.Id), ScanOperator.Equal, id),
+                new ScanCondition(nameof(TimelineEventAttachmentModel.TenantId), ScanOperator.Equal, _tenantId)
             };
             
-            return _context.ScanAsync<TimelineEventModel>(conditions).GetRemainingAsync().Result.Single();
+            return _context.ScanAsync<TimelineEventAttachmentModel>(conditions).GetRemainingAsync().Result.Single();
+        }
+
+        public void SaveModel(TimelineEventAttachmentModel model)
+        {
+            _context.SaveAsync(model);
         }
     
     }
