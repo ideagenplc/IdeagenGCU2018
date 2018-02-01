@@ -3,10 +3,9 @@
 namespace TimelineLite.StorageModels
 {
     [DynamoDBTable("TimelineEventStore")]
-    public class TimelineEventModel
+    public class TimelineEventModel : BaseModel
     {
         [DynamoDBHashKey]
-        public string Id { get; set; }
         public string Title { get; set; }
         public string EventDateTime { get; set; }
         public string Description { get; set; }
