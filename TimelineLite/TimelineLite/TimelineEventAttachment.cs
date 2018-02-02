@@ -1,7 +1,10 @@
+using System;
+using System.ComponentModel.DataAnnotations;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using TimelineLite.Logging;
 using TimelineLite.Requests.TimelineEventAttachments;
 using TimelineLite.StorageModels;
 using static TimelineLite.Requests.RequestHelper;
@@ -11,6 +14,11 @@ namespace TimelineLite
 {
     public class TimelineEventAttachment : LambdaBase
     {
+        
+        public TimelineEventAttachment(ILog logger) : base(logger)
+        {
+        }
+        
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => CreateAttachment(request));
@@ -29,13 +37,9 @@ namespace TimelineLite
         private static APIGatewayProxyResponse CreateAttachment(APIGatewayProxyRequest request)
         {
             var timelineEventAttachmentRequest = ParseRequestBody<CreateTimelineEventAttachmentRequest>(request);
-
-            if (string.IsNullOrWhiteSpace(timelineEventAttachmentRequest.TimelineEventId))
-                return WrapResponse("Invalid Timeline Event Id", 400);
-            if (string.IsNullOrWhiteSpace(timelineEventAttachmentRequest.Title))
-                return WrapResponse("Invalid Timeline Event Attachment Title ", 400);
-            if (string.IsNullOrWhiteSpace(timelineEventAttachmentRequest.AttachmentId))
-                return WrapResponse("Invalid Timeline Event Attachment Id ", 400);
+            ValidateTimelineEventAttachmentId(timelineEventAttachmentRequest.AttachmentId);
+            ValidateTimelineEventAttachentTitle(timelineEventAttachmentRequest.AttachmentId);
+            ValidateTimelineEventId(timelineEventAttachmentRequest.AttachmentId);
 
             var timelineEventAttachment = new TimelineEventAttachmentModel
             {
@@ -51,10 +55,8 @@ namespace TimelineLite
         {
             var timelineEventAttachmentRequest = ParseRequestBody<EditTimelineEventAttachmentTitleRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventAttachmentRequest.Title))
-                return WrapResponse("Invalid Timeline Event Attachment Title ", 400);
-            if (string.IsNullOrWhiteSpace(timelineEventAttachmentRequest.AttachmentId))
-                return WrapResponse("Invalid Timeline Event Attachment Id", 400);
+            ValidateTimelineEventAttachmentId(timelineEventAttachmentRequest.AttachmentId);
+            ValidateTimelineEventAttachentTitle(timelineEventAttachmentRequest.AttachmentId);
             
             var repo = GetRepo(timelineEventAttachmentRequest.TenantId);
             var model = repo.GetModel(timelineEventAttachmentRequest.AttachmentId);
@@ -67,8 +69,7 @@ namespace TimelineLite
         {
             var timelineEventAttachmentRequest = ParseRequestBody<DeleteTimelineEventAttachmentRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventAttachmentRequest.AttachmentId))
-                return WrapResponse("Invalid Timeline Event Attachment Id", 400);
+            ValidateTimelineEventAttachmentId(timelineEventAttachmentRequest.AttachmentId);
             
             var repo = GetRepo(timelineEventAttachmentRequest.TenantId);
             var model = repo.GetModel(timelineEventAttachmentRequest.AttachmentId);
@@ -82,6 +83,24 @@ namespace TimelineLite
         private static DynamoDbTimelineEventAttachmentRepository GetRepo(string tenantId)
         {
             return new DynamoDbTimelineEventAttachmentRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), tenantId);
+        }
+        
+        private static void ValidateTimelineEventAttachmentId(string timelineEventAttachmentId)
+        {
+            if (string.IsNullOrWhiteSpace(timelineEventAttachmentId))
+                throw new ValidationException("Invalid Timeline Id");
+        }
+        
+        private static void ValidateTimelineEventId(string timelineEventId)
+        {
+            if (string.IsNullOrWhiteSpace(timelineEventId))
+                throw new ValidationException("Invalid Timeline Id");
+        }
+        
+        private static void ValidateTimelineEventAttachentTitle(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                throw new ValidationException("Invalid Timeline Event Attachment Title");
         }
     }
 }

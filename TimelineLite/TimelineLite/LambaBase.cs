@@ -5,18 +5,20 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
 using TimelineLite.Core;
+using TimelineLite.Logging;
 using TimelineLite.Requests;
 using TimelineLite.StorageModels;
 using static TimelineLite.Requests.RequestHelper;
 using static TimelineLite.Responses.ResponseHelper;
-
-// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
-
 namespace TimelineLite
 {
     public abstract class LambdaBase
     {
+        private readonly ILog _logger;
+        protected LambdaBase(ILog logger)
+        {
+            _logger = logger;
+        }
         protected static APIGatewayProxyResponse Handle(Func<APIGatewayProxyResponse> handler)
         {
             try
@@ -31,6 +33,11 @@ namespace TimelineLite
             {
                 return WrapResponse($"Unexpected Exception : {e.Message}", 500);
             }
+        }
+
+        protected void Log(string message)
+        {
+            _logger.Log(message);
         }
     }
 }

@@ -5,6 +5,7 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
 using TimelineLite.Core;
+using TimelineLite.Logging;
 using TimelineLite.Requests;
 using TimelineLite.StorageModels;
 using static TimelineLite.Requests.RequestHelper;
@@ -17,6 +18,10 @@ namespace TimelineLite
 {
     public class Timeline : LambdaBase
     {
+        public Timeline(ILog logger) : base(logger)
+        {
+        }
+        
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => CreateTimeline(request));
@@ -158,6 +163,5 @@ namespace TimelineLite
 //            return WrapResponse($"OK");
             return WrapResponse($"OK");
         }
-
     }
 }

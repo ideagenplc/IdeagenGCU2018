@@ -4,6 +4,7 @@ using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using TimelineLite.Logging;
 using TimelineLite.Requests.TimelineEvents;
 using TimelineLite.StorageModels;
 using static TimelineLite.Requests.RequestHelper;
@@ -13,6 +14,10 @@ namespace TimelineLite
 {
     public class TimelineEvent : LambdaBase
     {
+        public TimelineEvent(ILog logger) : base(logger)
+        {
+        }
+        
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => CreateTimelineEvent(request));
