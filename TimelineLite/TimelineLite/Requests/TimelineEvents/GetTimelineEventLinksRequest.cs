@@ -4,5 +4,6 @@
     {
         public string TimelineEventId;
         public string PaginationToken;
+        public int skip;
     }
 }

@@ -146,9 +146,9 @@ namespace TimelineLite
 
             var repo = GetRepo(timelineEventRequest.TenantId);
             //var eventModel = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
-            var timelineEventLinkedModel = repo.GetTimelineEventLinks(timelineEventRequest.TimelineEventId, timelineEventRequest.PaginationToken, out var newPaginationToken);
+            var timelineEventLinkedModel = repo.GetTimelineEventLinks(timelineEventRequest.TimelineEventId, timelineEventRequest.skip);
             
-            Console.WriteLine($"PaginationToken: {newPaginationToken}");
+            Console.WriteLine($"Skipping: {timelineEventRequest.skip}");
             Console.WriteLine("Returning linked timeline events");
             foreach (var linkedModel in timelineEventLinkedModel)
             {
