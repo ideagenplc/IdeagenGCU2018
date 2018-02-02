@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
@@ -56,14 +57,10 @@ namespace TimelineLite
         {
             var timelineEventRequest = ParseRequestBody<CreateTimelineEventRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
-                return WrapResponse("Invalid Timeline Event Id", 400);
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.Title))
-                return WrapResponse("Invalid Timeline Event Title ", 400);
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.Description))
-                return WrapResponse("Invalid Timeline Event Description ", 400);
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.EventDateTime))
-                return WrapResponse("Invalid Timeline Event Date Time ", 400);
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
+            ValidateTimelineEventTitle(timelineEventRequest.Title);
+            ValidateTimelineEventDescription(timelineEventRequest.Description);
+            ValidateTimelineEventDateTime(timelineEventRequest.EventDateTime);
 
             var timelineEvent = new TimelineEventModel
             {
@@ -81,10 +78,8 @@ namespace TimelineLite
         {
             var timelineEventRequest = ParseRequestBody<EditTimelineEventTitleRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
-                return WrapResponse("Invalid Timeline Event Id", 400);
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.Title))
-                return WrapResponse("Invalid Timeline Event Title ", 400);
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
+            ValidateTimelineEventTitle(timelineEventRequest.Title);
 
             var repo = GetRepo(timelineEventRequest.TenantId);
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
@@ -98,10 +93,8 @@ namespace TimelineLite
         {
             var timelineEventRequest = ParseRequestBody<EditTimelineEventDescriptionRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
-                return WrapResponse("Invalid Timeline Event Id", 400);
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.Desciption))
-                return WrapResponse("Invalid Timeline Event Description", 400);
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
+            ValidateTimelineEventDescription(timelineEventRequest.Desciption);
 
             var repo = GetRepo(timelineEventRequest.TenantId);
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
@@ -115,10 +108,8 @@ namespace TimelineLite
         {
             var timelineEventRequest = ParseRequestBody<EditTimelineEventDateTimeRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
-                return WrapResponse("Invalid Timeline Event Id", 400);
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.EventDateTime))
-                return WrapResponse("Invalid Timeline Event Date Time", 400);
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
+            ValidateTimelineEventDateTime(timelineEventRequest.EventDateTime);
 
             var repo = GetRepo(timelineEventRequest.TenantId);
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
@@ -132,8 +123,7 @@ namespace TimelineLite
         {
             var timelineEventRequest = ParseRequestBody<DeleteTimelineEventRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
-                return WrapResponse("Invalid Timeline Event Id", 400);
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
 
             var repo = GetRepo(timelineEventRequest.TenantId);
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
@@ -146,10 +136,9 @@ namespace TimelineLite
         {
             var timelineEventRequest = ParseRequestBody<LinkTimelineEventToTimelineEventRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
-                return WrapResponse("Invalid Timeline Event Id", 400);
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
             if (string.IsNullOrWhiteSpace(timelineEventRequest.LinkedToTimelineEventId))
-                return WrapResponse("Invalid Linked to Timeline Event Id", 400);
+                throw new ValidationException("Invalid Linked to Timeline Event Id");
 
             var repo = GetRepo(timelineEventRequest.TenantId);
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
@@ -170,10 +159,9 @@ namespace TimelineLite
         {
             var timelineEventRequest = ParseRequestBody<UnlinkTimelineEventToTimelineEventRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
-                return WrapResponse("Invalid Timeline Event Id", 400);
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
             if (string.IsNullOrWhiteSpace(timelineEventRequest.UnlinkedFromTimelineEventId))
-                return WrapResponse("Invalid Unlinked from Timeline Event Id", 400);
+                throw new ValidationException("Invalid Unlinked from Timeline Event Id");
 
             var repo = GetRepo(timelineEventRequest.TenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
@@ -191,8 +179,7 @@ namespace TimelineLite
         {
             var timelineEventRequest = ParseRequestBody<GetTimelineEventLinksRequest>(request);
 
-            if (string.IsNullOrWhiteSpace(timelineEventRequest.TimelineEventId))
-                return WrapResponse("Invalid Timeline Event Id", 400);
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
 
             var repo = GetRepo(timelineEventRequest.TenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
@@ -212,6 +199,30 @@ namespace TimelineLite
         private static DynamoDbTimelineEventRepository GetRepo(string tenantId)
         {
             return new DynamoDbTimelineEventRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), tenantId);
+        }
+
+        private static void ValidateTimelineEventId(string timelineEventId)
+        {
+            if (string.IsNullOrWhiteSpace(timelineEventId))
+                throw new ValidationException("Invalid Timeline Id");
+        }
+        
+        private static void ValidateTimelineEventTitle(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                throw new ValidationException("Invalid Timeline Event Title");
+        }
+        
+        private static void ValidateTimelineEventDescription(string description)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+                throw new ValidationException("Invalid Timeline Event Description");
+        }
+        
+        private static void ValidateTimelineEventDateTime(string dateTime)
+        {
+            if (string.IsNullOrWhiteSpace(dateTime))
+                throw new ValidationException("Invalid Timeline Event DateTime");
         }
     }
 }
