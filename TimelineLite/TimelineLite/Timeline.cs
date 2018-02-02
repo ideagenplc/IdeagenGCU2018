@@ -15,7 +15,7 @@ using static TimelineLite.Responses.ResponseHelper;
 
 namespace TimelineLite
 {
-    public class Timeline
+    public class Timeline : LambdaBase
     {
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
@@ -46,22 +46,6 @@ namespace TimelineLite
         public APIGatewayProxyResponse GetEvents(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => GetLinkedEvents(request));
-        }
-
-        private static APIGatewayProxyResponse Handle(Func<APIGatewayProxyResponse> handler)
-        {
-            try
-            {
-                return handler.Invoke();
-            }
-            catch (GCUException e)
-            {
-                return WrapResponse(e.Message, 400);
-            }
-            catch (Exception e)
-            {
-                return WrapResponse($"Unexpected Exception : {e.Message}", 500);
-            }
         }
 
         private static APIGatewayProxyResponse CreateTimeline(APIGatewayProxyRequest request)

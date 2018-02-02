@@ -9,9 +9,24 @@ using static TimelineLite.Responses.ResponseHelper;
 
 namespace TimelineLite
 {
-    public class TimelineEventAttachment
+    public class TimelineEventAttachment : LambdaBase
     {
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => CreateAttachment(request));
+        }
+        
+        public APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => EditTitle(request));
+        }
+        
+        public APIGatewayProxyResponse Delete(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => Delete(request));
+        }
+        
+        private static APIGatewayProxyResponse CreateAttachment(APIGatewayProxyRequest request)
         {
             var timelineEventAttachmentRequest = ParseRequestBody<CreateTimelineEventAttachmentRequest>(request);
 
@@ -32,7 +47,7 @@ namespace TimelineLite
             return WrapResponse($"{timelineEventAttachmentRequest.TenantId} {timelineEventAttachmentRequest.TimelineEventId} {timelineEventAttachmentRequest.Title} {timelineEventAttachmentRequest.AttachmentId}");
         }
         
-        public APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request, ILambdaContext context)
+        private static APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request)
         {
             var timelineEventAttachmentRequest = ParseRequestBody<EditTimelineEventAttachmentTitleRequest>(request);
 
@@ -48,7 +63,7 @@ namespace TimelineLite
             return WrapResponse($"{timelineEventAttachmentRequest.TenantId} {timelineEventAttachmentRequest.Title} {timelineEventAttachmentRequest.AttachmentId}");
         }
         
-        public APIGatewayProxyResponse Delete(APIGatewayProxyRequest request, ILambdaContext context)
+        private static APIGatewayProxyResponse Delete(APIGatewayProxyRequest request)
         {
             var timelineEventAttachmentRequest = ParseRequestBody<DeleteTimelineEventAttachmentRequest>(request);
 
