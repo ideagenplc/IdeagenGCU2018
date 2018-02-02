@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Amazon.DynamoDBv2;
@@ -17,6 +18,8 @@ namespace TimelineLite
 
         public void CreateTimlineEvent(TimelineEventModel model)
         {
+            Console.WriteLine($"Creating timeline event for Id:{model.Id}");
+            model.TenantId = TenantId;
             Context.SaveAsync(model).Wait();
         }
         
@@ -34,11 +37,13 @@ namespace TimelineLite
 
         public void SaveTimelineEventModel(TimelineEventModel model)
         {
+            model.TenantId = TenantId;
             Context.SaveAsync(model).Wait();
         }
         
         public void SaveTimelineEventLinkedModel(TimelineEventLinkModel model)
         {
+            model.TenantId = TenantId;
             Context.SaveAsync(model).Wait();
         }
         

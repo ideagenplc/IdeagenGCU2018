@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Resources:
-    CreateFunction:
+    CreateTimelineFunction:
         Type: AWS::Serverless::Function
         Properties:
            Handler: TimelineLite::TimelineLite.Timeline::Create
@@ -19,7 +19,8 @@ Resources:
                Properties:
                  Path: /Timeline/Create
                  Method: put
-    EditTitleFunction:
+
+    EditTimelineTitleFunction:
         Type: AWS::Serverless::Function
         Properties:
            Handler: TimelineLite::TimelineLite.Timeline::EditTitle
@@ -37,7 +38,8 @@ Resources:
                Properties:
                  Path: /Timeline/Edit
                  Method: put
-    DeleteFunction:
+
+    DeleteTimelineFunction:
         Type: AWS::Serverless::Function
         Properties:
            Handler: TimelineLite::TimelineLite.Timeline::Delete
@@ -47,7 +49,7 @@ Resources:
              -
                AmazonDynamoDBFullAccess
              -
-               arn:aws:iam::346310877561:policy/SimpleDbFullAccess             
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
            Timeout: 15
            Events:
              GetResource:
@@ -55,7 +57,101 @@ Resources:
                Properties:
                  Path: /Timeline/Delete
                  Method: put
-    GetFunction:
+
+    LinkEventToTimelineFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite::TimelineLite.Timeline::LinkEvent
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+           Timeout: 15
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /Timeline/LinkEvent
+                 Method: put
+
+    UnlinkEventFromTimelineFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite::TimelineLite.Timeline::UnlinkEvent
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+           Timeout: 15
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /Timeline/UnlinkEvent
+                 Method: put
+
+    UnlinkEventFromTimelineFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite::TimelineLite.Timeline::GetEvents
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+           Timeout: 15
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /Timeline/GetEvents
+                 Method: put
+
+    CreateTimelineEventFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite::TimelineLite.TimelineEvent::Create
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+           Timeout: 15
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEvent/Create
+                 Method: put
+    LinkTimelineEventsFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite::TimelineLite.TimelineEvent::LinkEvents
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+           Timeout: 15
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEvent/LinkEvents
+                 Method: put
+    GetLinkedTimelineEventsFunction:
         Type: AWS::Serverless::Function
         Properties:
            Handler: TimelineLite::TimelineLite.TimelineEvent::GetLinkedTimelineEvents
@@ -65,14 +161,14 @@ Resources:
              -
                AmazonDynamoDBFullAccess
              -
-               arn:aws:iam::346310877561:policy/SimpleDbFullAccess             
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
            Timeout: 15
            Events:
              GetResource:
                Type: Api
                Properties:
                  Path: /TimelineEvent/GetLinkedTimelineEvents
-                 Method: put
+                 Method: get
 
     TimelineStorage:
       Type: AWS::DynamoDB::Table
@@ -116,7 +212,7 @@ Resources:
             -
               AttributeName: Id
               KeyType: RANGE
-        
+
         GlobalSecondaryIndexes:
             -
                 IndexName: TimelineEventId-Index
@@ -129,11 +225,11 @@ Resources:
                 ProvisionedThroughput:
                     ReadCapacityUnits: 5
                     WriteCapacityUnits: 5
-                    
+
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
-          
+
         TableName: "TimelineEventLinkStore"
     EventStorage:
       Type: AWS::DynamoDB::Table

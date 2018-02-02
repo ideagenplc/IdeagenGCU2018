@@ -17,13 +17,15 @@ using static TimelineLite.Responses.ResponseHelper;
 namespace TimelineLite
 {
     public class Timeline : LambdaBase
+<<<<<<< HEAD
     {
         public Timeline() : base()
         {
         }
         
-        #region Functions
-        
+=======
+    {   
+>>>>>>> eb4107e834c67213acb93d87a2f6338b75921fb9
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => CreateTimeline(request));
@@ -54,11 +56,7 @@ namespace TimelineLite
         {
             return Handle(() => GetLinkedEvents(request));
         }
-        
-        #endregion
-        
-        #region Private Methods
-        
+
         private static APIGatewayProxyResponse CreateTimeline(APIGatewayProxyRequest request)
         {
             var createTimelineRequest = ParseRequestBody<CreateTimelineRequest>(request);
@@ -171,8 +169,5 @@ namespace TimelineLite
 //            return WrapResponse($"OK");
             return WrapResponse($"OK");
         }
-        
-        #endregion
-        
     }
 }

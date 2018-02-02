@@ -14,11 +14,6 @@ namespace TimelineLite
 {
     public class TimelineEventAttachment : LambdaBase
     {
-        
-        public TimelineEventAttachment(ILog logger) : base(logger)
-        {
-        }
-        
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => CreateAttachment(request));

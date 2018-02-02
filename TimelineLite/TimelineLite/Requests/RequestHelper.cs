@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using Amazon;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.SimpleDB;
@@ -26,7 +27,7 @@ namespace TimelineLite.Requests
 
         private static T AuthoriseRequest<T>(this T request) where T : BaseRequest
         {
-            var authToken = GetAuthToken(request);
+            var authToken = GetAuthToken(request.TenantId);
             
             if (authToken == request.AuthToken)
             return request;
@@ -35,19 +36,39 @@ namespace TimelineLite.Requests
                 throw new AuthenticationException($"Invalid Authorisation Token: {request.AuthToken}");
             }
         }
+        
+        private static string AuthoriseGetRequest<T>(this T request) where T : APIGatewayProxyRequest
+        {
+            if (request.HttpMethod != "GET")
+                throw new HttpRequestException("Request is not a GET");
+            var tenant = request.Headers["GCU-TenantId"];
+            if (string.IsNullOrWhiteSpace(tenant))
+                throw new AuthenticationException("Header: GCU-TenantId hs not been set on GET Request");
+            var authToken = GetAuthToken(tenant);
+            var recievedAuthToken = request.Headers["GCU-AuthToken"];
+            if (string.IsNullOrWhiteSpace(recievedAuthToken))
+                throw new AuthenticationException("Header: GCU-AuthToken hs not been set on GET Request");
+            
+            if (authToken == recievedAuthToken)
+                return tenant;
+            else
+            {
+                throw new AuthenticationException($"Invalid Authorisation Token: {recievedAuthToken}");
+            }
+        }
 
-        private static string GetAuthToken<T>(T request) where T : BaseRequest
+        private static string GetAuthToken(string tenantId)
         {
             string authToken;
             try
             {
-                var simpleDbrequest = new GetAttributesRequest(_tableName, request.TenantId);
+                var simpleDbrequest = new GetAttributesRequest(_tableName, tenantId);
                 var response = _simpleDbClient.GetAttributesAsync(simpleDbrequest).Result;
                 authToken = response.Attributes.Single(x => x.Name == "Auth_Token").Value;
             }
             catch (Exception)
             {
-                throw new AuthenticationException($"Error retrieving authentication token. Is {request.TenantId} a valid tenantId?");
+                throw new AuthenticationException($"Error retrieving authentication token. Is {tenantId} a valid tenantId?");
             }
             return authToken;
         }
