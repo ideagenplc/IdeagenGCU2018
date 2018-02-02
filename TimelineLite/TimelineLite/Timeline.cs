@@ -18,7 +18,7 @@ namespace TimelineLite
 {
     public class Timeline : LambdaBase
     {
-        public Timeline(ILog logger) : base(logger)
+        public Timeline() : base()
         {
         }
         
@@ -110,26 +110,28 @@ namespace TimelineLite
         
         private static APIGatewayProxyResponse LinkEventToTimeline(APIGatewayProxyRequest request)
         {
-//            var linkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
-//
-//            if (string.IsNullOrWhiteSpace(linkRequest.TimelineId))
-//                return WrapResponse("Invalid Timeline Id", 400);
-//            if (string.IsNullOrWhiteSpace(linkRequest.EventId))
-//                return WrapResponse("Invalid Event Id", 400);
-//
-//            var timelineRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
-//                linkRequest.TenantId);
-//            var linkRepo = new DynamoDbTimelineEventLinkRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
-//                linkRequest.TenantId);
-//            var model = timelineRepo.GetModel(linkRequest.TimelineId);
-//            var linkModel = new TimelineEventLinkModel
-//            {
-//                EventId = linkRequest.EventId,
-//                TimelineId = model.Id,
-//                Id = Guid.NewGuid().ToString()
-//            };
+            var linkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
 
-            //linkRepo.CreateLink(linkModel);
+            if (string.IsNullOrWhiteSpace(linkRequest.TimelineId))
+                return WrapResponse("Invalid Timeline Id", 400);
+            if (string.IsNullOrWhiteSpace(linkRequest.EventId))
+                return WrapResponse("Invalid Event Id", 400);
+
+            var timelineRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+                linkRequest.TenantId);
+            var linkRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+                linkRequest.TenantId);
+            
+            
+            var model = timelineRepo.GetModel(linkRequest.TimelineId);
+            var linkModel = new TimelineTimelineEventLinkModel()
+            {
+                TimelineEventId = linkRequest.EventId,
+                TimelineId = model.Id,
+                Id = Guid.NewGuid().ToString()
+            };
+
+            linkRepo.CreateLink(linkModel);
             return WrapResponse($"OK");
         }
         

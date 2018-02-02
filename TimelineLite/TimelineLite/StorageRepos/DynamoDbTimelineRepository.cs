@@ -26,6 +26,16 @@ namespace TimelineLite
             _context.SaveAsync(model).Wait();
         }
         
+        public void CreateLink(TimelineTimelineEventLinkModel model)
+        {
+            model.TenantId = _tenantId;
+            _context.SaveAsync(model).Wait();
+        }
+        
+        public void GetLinkedEvents(string timelineId)
+        {
+        }
+        
         public TimelineModel GetModel(string id)
         {
             var conditions = new List<ScanCondition>
