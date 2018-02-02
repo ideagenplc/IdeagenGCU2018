@@ -14,10 +14,6 @@ namespace TimelineLite
 {
     public class TimelineEvent : LambdaBase
     {
-        public TimelineEvent(ILog logger) : base(logger)
-        {
-        }
-        
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => CreateTimelineEvent(request));
@@ -60,12 +56,14 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse CreateTimelineEvent(APIGatewayProxyRequest request)
         {
+            Console.WriteLine("Create Timeline Request recieved");
             var timelineEventRequest = ParseRequestBody<CreateTimelineEventRequest>(request);
 
+            Console.WriteLine($"Request parsed {timelineEventRequest}");
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
             ValidateTimelineEventTitle(timelineEventRequest.Title);
-            ValidateTimelineEventDescription(timelineEventRequest.Description);
             ValidateTimelineEventDateTime(timelineEventRequest.EventDateTime);
+            Console.WriteLine($"Request Validation passed");
 
             var timelineEvent = new TimelineEventModel
             {
@@ -74,7 +72,10 @@ namespace TimelineLite
                 EventDateTime = timelineEventRequest.EventDateTime,
                 Description = timelineEventRequest.Description
             };
+            Console.WriteLine($"Getting repo");
             GetRepo(timelineEventRequest.TenantId).CreateTimlineEvent(timelineEvent);
+            
+            Console.WriteLine($"Wrapping response");
             return WrapResponse(
                 $"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.Title} {timelineEventRequest.Description} {timelineEventRequest.EventDateTime}");
         }
@@ -99,7 +100,6 @@ namespace TimelineLite
             var timelineEventRequest = ParseRequestBody<EditTimelineEventDescriptionRequest>(request);
 
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
-            ValidateTimelineEventDescription(timelineEventRequest.Desciption);
 
             var repo = GetRepo(timelineEventRequest.TenantId);
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
@@ -216,12 +216,6 @@ namespace TimelineLite
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new ValidationException("Invalid Timeline Event Title");
-        }
-        
-        private static void ValidateTimelineEventDescription(string description)
-        {
-            if (string.IsNullOrWhiteSpace(description))
-                throw new ValidationException("Invalid Timeline Event Description");
         }
         
         private static void ValidateTimelineEventDateTime(string dateTime)

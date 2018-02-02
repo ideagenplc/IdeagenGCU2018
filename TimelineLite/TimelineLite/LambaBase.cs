@@ -14,11 +14,6 @@ namespace TimelineLite
 {
     public abstract class LambdaBase
     {
-        private readonly ILog _logger;
-        protected LambdaBase(ILog logger)
-        {
-            _logger = logger;
-        }
         protected static APIGatewayProxyResponse Handle(Func<APIGatewayProxyResponse> handler)
         {
             try
@@ -37,7 +32,6 @@ namespace TimelineLite
 
         protected void Log(string message)
         {
-            _logger.Log(message);
         }
     }
 }

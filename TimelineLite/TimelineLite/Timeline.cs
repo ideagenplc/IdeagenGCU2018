@@ -17,11 +17,7 @@ using static TimelineLite.Responses.ResponseHelper;
 namespace TimelineLite
 {
     public class Timeline : LambdaBase
-    {
-        public Timeline(ILog logger) : base(logger)
-        {
-        }
-        
+    {   
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => CreateTimeline(request));
