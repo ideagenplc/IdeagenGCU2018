@@ -4,7 +4,9 @@ using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using Newtonsoft.Json;
 using TimelineLite.Logging;
+using TimelineLite.Requests;
 using TimelineLite.Requests.TimelineEvents;
 using TimelineLite.StorageModels;
 using static TimelineLite.Requests.RequestHelper;
@@ -21,66 +23,65 @@ namespace TimelineLite
         
         public APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return Handle(() => EditTitle(request));
+            return Handle(() => EditTimelineEventTitle(request));
         }
         
         public APIGatewayProxyResponse EditDescription(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return Handle(() => EditDescription(request));
+            return Handle(() => EditTimelineEventDescription(request));
         }
         
         public APIGatewayProxyResponse EditEventDateTime(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return Handle(() => EditEventDateTime(request));
+            return Handle(() => EditTimelineEventDateTime(request));
         }
         
         public APIGatewayProxyResponse DeleteEvent(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return Handle(() => DeleteEvent(request));
+            return Handle(() => DeleteTimelineEvent(request));
         }
         
         public APIGatewayProxyResponse LinkEvents(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return Handle(() => LinkEvents(request));
+            return Handle(() => LinkTimelineEvents(request));
         }
         
         public APIGatewayProxyResponse UnlinkEvents(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return Handle(() => UnlinkEvents(request));
+            return Handle(() => UnlinkTimelineEvents(request));
         }
         
-        public APIGatewayProxyResponse GetLinkedTimelineEvents(APIGatewayProxyRequest request, ILambdaContext context)
+        public APIGatewayProxyResponse GetLinkedEvents(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => GetLinkedTimelineEvents(request));
         }
 
         private static APIGatewayProxyResponse CreateTimelineEvent(APIGatewayProxyRequest request)
         {
-            Console.WriteLine("Create Timeline Request recieved");
+            Log("Create Timeline Request recieved");
             var timelineEventRequest = ParseRequestBody<CreateTimelineEventRequest>(request);
 
-            Console.WriteLine($"Request parsed {timelineEventRequest}");
+            Log($"Request parsed {timelineEventRequest}");
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
             ValidateTimelineEventTitle(timelineEventRequest.Title);
             ValidateTimelineEventDateTime(timelineEventRequest.EventDateTime);
-            Console.WriteLine($"Request Validation passed");
+            Log($"Request Validation passed");
 
-            var timelineEvent = new TimelineEventModel
+            var model = new TimelineEventModel
             {
                 Id = timelineEventRequest.TimelineEventId,
                 Title = timelineEventRequest.Title,
                 EventDateTime = timelineEventRequest.EventDateTime,
                 Description = timelineEventRequest.Description
             };
-            Console.WriteLine($"Getting repo");
-            GetRepo(timelineEventRequest.TenantId).CreateTimlineEvent(timelineEvent);
+            Log($"Getting repo");
+            GetRepo(timelineEventRequest.TenantId).CreateTimlineEvent(model);
             
-            Console.WriteLine($"Wrapping response");
-            return WrapResponse(
-                $"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.Title} {timelineEventRequest.Description} {timelineEventRequest.EventDateTime}");
+            Log($"Wrapping response");
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
 
-        private static APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request)
+        private static APIGatewayProxyResponse EditTimelineEventTitle(APIGatewayProxyRequest request)
         {
             var timelineEventRequest = ParseRequestBody<EditTimelineEventTitleRequest>(request);
 
@@ -91,11 +92,10 @@ namespace TimelineLite
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.Title = timelineEventRequest.Title;
             repo.SaveTimelineEventModel(model);
-            return WrapResponse(
-                $"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.Title}");
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
 
-        private static APIGatewayProxyResponse EditDescription(APIGatewayProxyRequest request)
+        private static APIGatewayProxyResponse EditTimelineEventDescription(APIGatewayProxyRequest request)
         {
             var timelineEventRequest = ParseRequestBody<EditTimelineEventDescriptionRequest>(request);
 
@@ -105,11 +105,10 @@ namespace TimelineLite
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.Description = timelineEventRequest.Desciption;
             repo.SaveTimelineEventModel(model);
-            return WrapResponse(
-                $"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.Desciption}");
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
 
-        private static APIGatewayProxyResponse EditEventDateTime(APIGatewayProxyRequest request)
+        private static APIGatewayProxyResponse EditTimelineEventDateTime(APIGatewayProxyRequest request)
         {
             var timelineEventRequest = ParseRequestBody<EditTimelineEventDateTimeRequest>(request);
 
@@ -120,11 +119,10 @@ namespace TimelineLite
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.EventDateTime = timelineEventRequest.EventDateTime;
             repo.SaveTimelineEventModel(model);
-            return WrapResponse(
-                $"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.EventDateTime}");
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
 
-        private static APIGatewayProxyResponse DeleteEvent(APIGatewayProxyRequest request)
+        private static APIGatewayProxyResponse DeleteTimelineEvent(APIGatewayProxyRequest request)
         {
             var timelineEventRequest = ParseRequestBody<DeleteTimelineEventRequest>(request);
 
@@ -134,10 +132,10 @@ namespace TimelineLite
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.IsDeleted = true;
             repo.SaveTimelineEventModel(model);
-            return WrapResponse($"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId}");
+            return WrapResponse($"Successfully Deleted Timeline Event: {timelineEventRequest.TimelineEventId}");
         }
 
-        private static APIGatewayProxyResponse LinkEvents(APIGatewayProxyRequest request)
+        private static APIGatewayProxyResponse LinkTimelineEvents(APIGatewayProxyRequest request)
         {
             var timelineEventRequest = ParseRequestBody<LinkTimelineEventToTimelineEventRequest>(request);
 
@@ -148,19 +146,18 @@ namespace TimelineLite
             var repo = GetRepo(timelineEventRequest.TenantId);
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             var linkedTomodel = repo.GetTimelineEventModel(timelineEventRequest.LinkedToTimelineEventId);
-
-            repo.SaveTimelineEventLinkedModel(new TimelineEventLinkModel
+            var timelineEventLinkedModel = new TimelineEventLinkModel
             {
                 Id = Guid.NewGuid().ToString(),
                 TimelineEventId = model.Id,
                 LinkedToTimelineEventId = linkedTomodel.Id
-            });
+            };
+            repo.SaveTimelineEventLinkedModel(timelineEventLinkedModel);
 
-            return WrapResponse(
-                $"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.LinkedToTimelineEventId}");
+            return WrapResponse($"{JsonConvert.SerializeObject(timelineEventLinkedModel)}");
         }
 
-        private static APIGatewayProxyResponse UnlinkEvents(APIGatewayProxyRequest request)
+        private static APIGatewayProxyResponse UnlinkTimelineEvents(APIGatewayProxyRequest request)
         {
             var timelineEventRequest = ParseRequestBody<UnlinkTimelineEventToTimelineEventRequest>(request);
 
@@ -177,28 +174,30 @@ namespace TimelineLite
             repo.SaveTimelineEventLinkedModel(timelineEventLinkedModel);
 
             return WrapResponse(
-                $"{timelineEventRequest.TenantId} {timelineEventRequest.TimelineEventId} {timelineEventRequest.UnlinkedFromTimelineEventId}");
+                $"Successfully unlinked Timeline Event: {timelineEventRequest.TimelineEventId} from Timeline Event: {timelineEventRequest.UnlinkedFromTimelineEventId}");
         }
 
         private static APIGatewayProxyResponse GetLinkedTimelineEvents(APIGatewayProxyRequest request)
         {
-            var timelineEventRequest = ParseRequestBody<GetTimelineEventLinksRequest>(request);
+            var tenantId = request.AuthoriseGetRequest();
+            var timelineEventId = request.Headers["TimelineEventId"];
+            var skip = request.Headers["Skip"];
+            ValidateTimelineEventId(timelineEventId);
+            ValidateTimelineEventSkip(skip);
 
-            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
+            var repo = GetRepo(tenantId);
+            var eventModel = repo.GetTimelineEventModel(timelineEventId);
+            var timelineEventLinkedModels =
+                repo.GetTimelineEventLinks(eventModel.Id, int.Parse(skip));
 
-            var repo = GetRepo(timelineEventRequest.TenantId);
-            var eventModel = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
-            var timelineEventLinkedModel =
-                repo.GetTimelineEventLinks(timelineEventRequest.TimelineEventId, timelineEventRequest.skip);
-
-            Console.WriteLine($"Skipping: {timelineEventRequest.skip}");
-            Console.WriteLine("Returning linked timeline events");
-            foreach (var linkedModel in timelineEventLinkedModel)
+            Log($"Skipping: {skip}");
+            Log("Returning linked timeline events");
+            foreach (var linkedModel in timelineEventLinkedModels)
             {
-                Console.WriteLine(linkedModel);
+                Log(linkedModel.ToString());
             }
 
-            return WrapResponse(timelineEventLinkedModel);
+            return WrapResponse($"{JsonConvert.SerializeObject(timelineEventLinkedModels)}");
         }
 
         private static DynamoDbTimelineEventRepository GetRepo(string tenantId)
@@ -222,6 +221,12 @@ namespace TimelineLite
         {
             if (string.IsNullOrWhiteSpace(dateTime))
                 throw new ValidationException("Invalid Timeline Event DateTime");
+        }
+        
+        private static void ValidateTimelineEventSkip(string skip)
+        {
+            if (string.IsNullOrWhiteSpace(skip))
+                throw new ValidationException("Invalid skip");
         }
     }
 }

@@ -30,8 +30,9 @@ namespace TimelineLite
             }
         }
 
-        protected void Log(string message)
+        protected static void Log(string message)
         {
+            Console.WriteLine(message);
         }
     }
 }

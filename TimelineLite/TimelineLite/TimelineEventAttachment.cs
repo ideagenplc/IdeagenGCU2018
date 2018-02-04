@@ -4,6 +4,7 @@ using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using Newtonsoft.Json;
 using TimelineLite.Logging;
 using TimelineLite.Requests.TimelineEventAttachments;
 using TimelineLite.StorageModels;
@@ -21,12 +22,12 @@ namespace TimelineLite
         
         public APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return Handle(() => EditTitle(request));
+            return Handle(() => EditAttachmentTitle(request));
         }
         
         public APIGatewayProxyResponse Delete(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return Handle(() => Delete(request));
+            return Handle(() => DeleteAttachment(request));
         }
         
         private static APIGatewayProxyResponse CreateAttachment(APIGatewayProxyRequest request)
@@ -43,10 +44,11 @@ namespace TimelineLite
                 TimelineEventId = timelineEventAttachmentRequest.TimelineEventId
             };
             GetRepo(timelineEventAttachmentRequest.TenantId).CreateTimlineEventAttachment(timelineEventAttachment);
-            return WrapResponse($"{timelineEventAttachmentRequest.TenantId} {timelineEventAttachmentRequest.TimelineEventId} {timelineEventAttachmentRequest.Title} {timelineEventAttachmentRequest.AttachmentId}");
+
+            return WrapResponse($"{JsonConvert.SerializeObject(timelineEventAttachment)}");
         }
         
-        private static APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request)
+        private static APIGatewayProxyResponse EditAttachmentTitle(APIGatewayProxyRequest request)
         {
             var timelineEventAttachmentRequest = ParseRequestBody<EditTimelineEventAttachmentTitleRequest>(request);
 
@@ -57,10 +59,10 @@ namespace TimelineLite
             var model = repo.GetModel(timelineEventAttachmentRequest.AttachmentId);
             model.Title = timelineEventAttachmentRequest.Title;
             repo.SaveModel(model);
-            return WrapResponse($"{timelineEventAttachmentRequest.TenantId} {timelineEventAttachmentRequest.Title} {timelineEventAttachmentRequest.AttachmentId}");
+            return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
         
-        private static APIGatewayProxyResponse Delete(APIGatewayProxyRequest request)
+        private static APIGatewayProxyResponse DeleteAttachment(APIGatewayProxyRequest request)
         {
             var timelineEventAttachmentRequest = ParseRequestBody<DeleteTimelineEventAttachmentRequest>(request);
 
@@ -69,10 +71,10 @@ namespace TimelineLite
             var repo = GetRepo(timelineEventAttachmentRequest.TenantId);
             var model = repo.GetModel(timelineEventAttachmentRequest.AttachmentId);
             if(model.IsDeleted)
-                return WrapResponse("Timeline Event Attachment already deleted", 404);
+                return WrapResponse($"Cannot find attachment with Id {timelineEventAttachmentRequest.AttachmentId}", 404);
             model.IsDeleted = true;
             repo.SaveModel(model);
-            return WrapResponse($"{timelineEventAttachmentRequest.TenantId} {timelineEventAttachmentRequest.AttachmentId}");
+            return WrapResponse($"Successfully deleted Timeline event attachment: {timelineEventAttachmentRequest.AttachmentId}");
         }
 
         private static DynamoDbTimelineEventAttachmentRepository GetRepo(string tenantId)

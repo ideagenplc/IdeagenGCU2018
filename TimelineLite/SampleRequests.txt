@@ -1,13 +1,18 @@
+// Create Timeline
 {
-    "TenantId":"123",
-    "AuthToken":"456",
-    "TimelineId":"1337",
-    "Title":"Timeline 13 37"
-} // Create Timeline
-
+    "TenantId" : "IDGDev",
+    "AuthToken" : "1337",
+    "TimelineId":"d4350872-44a9-4117-983c-9d5c4666f4e6",
+    "Title":"Grounded Flight: F12FR"
+} 
+// Update Title
 {
-    "TenantId":"123",
-    "AuthToken":"456",
-    "TimelineId":"1337",
+    "TenantId" : "IDGDev",
+    "AuthToken" : "1337",
+    "TimelineId":"d4350872-44a9-4117-983c-9d5c4666f4e6",
     "Title":"New Title 2"
-} // Update Title
+} 
+// Get Timeline
+GCU-TenantId:IDGDev
+GCU-AuthToken:1337
+TimelineId:adebfa2f-1a6c-4ae1-8413-798c06c94db0

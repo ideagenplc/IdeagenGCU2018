@@ -37,7 +37,7 @@ namespace TimelineLite.Requests
             }
         }
         
-        private static string AuthoriseGetRequest<T>(this T request) where T : APIGatewayProxyRequest
+        public static string AuthoriseGetRequest<T>(this T request) where T : APIGatewayProxyRequest
         {
             if (request.HttpMethod != "GET")
                 throw new HttpRequestException("Request is not a GET");
