@@ -185,6 +185,18 @@ namespace TimelineLite
             ValidateTimelineEventId(timelineEventId);
             ValidateTimelineEventSkip(skip);
 
+<<<<<<< HEAD
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
+
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            var eventModel = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
+            var timelineEventLinkedModel =
+                repo.GetTimelineEventLinks(timelineEventRequest.TimelineEventId, timelineEventRequest.Skip);
+
+            Console.WriteLine($"Skipping: {timelineEventRequest.Skip}");
+            Console.WriteLine("Returning linked timeline events");
+            foreach (var linkedModel in timelineEventLinkedModel)
+=======
             var repo = GetRepo(tenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventId);
             var timelineEventLinkedModels =
@@ -193,6 +205,7 @@ namespace TimelineLite
             Log($"Skipping: {skip}");
             Log("Returning linked timeline events");
             foreach (var linkedModel in timelineEventLinkedModels)
+>>>>>>> d9c070d6b18d377bdbb199990caa69d071c5f2b6
             {
                 Log(linkedModel.ToString());
             }

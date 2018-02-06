@@ -18,12 +18,8 @@ namespace TimelineLite
 {
     public class Timeline : LambdaBase
     {
-        public Timeline() : base()
-        {
-        }
-        
         #region Functions
-        
+
         public APIGatewayProxyResponse Create(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => CreateTimeline(request));
@@ -33,7 +29,6 @@ namespace TimelineLite
         {
             return Handle(() => EditTimelineTitle(request));
         }
-
 
         public APIGatewayProxyResponse Delete(APIGatewayProxyRequest request, ILambdaContext context)
         {
@@ -54,14 +49,19 @@ namespace TimelineLite
         {
             return Handle(() => GetLinkedEvents(request));
         }
-        
+
+        public APIGatewayProxyResponse Get(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => GetTimeline(request));
+        }
+
         #endregion
-        
+
         #region Private Methods
-        
+
         private static APIGatewayProxyResponse CreateTimeline(APIGatewayProxyRequest request)
         {
-            var createTimelineRequest = ParseRequestBody<CreateTimelineRequest>(request);
+            var createTimelineRequest = ParsePutRequestBody<CreateTimelineRequest>(request);
 
             if (string.IsNullOrWhiteSpace(createTimelineRequest.TimelineId))
                 throw new ValidationException("Invalid Timeline Id");
@@ -84,7 +84,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse EditTimelineTitle(APIGatewayProxyRequest request)
         {
-            var editTimelineTitleRequest = ParseRequestBody<EditTimelineTitleRequest>(request);
+            var editTimelineTitleRequest = ParsePutRequestBody<EditTimelineTitleRequest>(request);
 
             if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
                 return WrapResponse("Invalid Timeline Id", 400);
@@ -98,10 +98,10 @@ namespace TimelineLite
             repo.SaveModel(model);
             return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
-        
+
         private static APIGatewayProxyResponse DeleteTimeline(APIGatewayProxyRequest request)
         {
-            var editTimelineTitleRequest = ParseRequestBody<DeleteTimelineRequest>(request);
+            var editTimelineTitleRequest = ParsePutRequestBody<DeleteTimelineRequest>(request);
 
             if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
                 return WrapResponse("Invalid Timeline Id", 400);
@@ -113,10 +113,10 @@ namespace TimelineLite
             repo.SaveModel(model);
             return WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
-        
+
         private static APIGatewayProxyResponse LinkEventToTimeline(APIGatewayProxyRequest request)
         {
-            var linkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
+            var linkRequest = ParsePutRequestBody<LinkEventToTimelineRequest>(request);
 
             if (string.IsNullOrWhiteSpace(linkRequest.TimelineId))
                 return WrapResponse("Invalid Timeline Id", 400);
@@ -127,8 +127,8 @@ namespace TimelineLite
                 linkRequest.TenantId);
             var linkRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
                 linkRequest.TenantId);
-            
-            
+
+
             var model = timelineRepo.GetModel(linkRequest.TimelineId);
             var linkModel = new TimelineTimelineEventLinkModel()
             {
@@ -140,7 +140,7 @@ namespace TimelineLite
             linkRepo.CreateLink(linkModel);
             return WrapResponse($"OK");
         }
-        
+
         private static APIGatewayProxyResponse UnlinkEventFromTimeline(APIGatewayProxyRequest request)
         {
 //            var unlinkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
@@ -156,7 +156,7 @@ namespace TimelineLite
 //            linkRepo.DeleteLink(unlinkRequest.TimelineId, unlinkRequest.EventId);
             return WrapResponse($"OK");
         }
-        
+
         private static APIGatewayProxyResponse GetLinkedEvents(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
@@ -179,8 +179,21 @@ namespace TimelineLite
             var events = linkRepo.GetLinkedEvents(timeLineId, skip);
             return WrapResponse(events);
         }
-        
+
+        private static APIGatewayProxyResponse GetTimeline(APIGatewayProxyRequest request)
+        {
+            var tenantId = request.AuthoriseGetRequest();
+            var timelineId = request.Headers["TimelineId"];
+
+            if (string.IsNullOrWhiteSpace(timelineId))
+                return WrapResponse("Invalid Timeline Id", 400);
+
+            var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+                tenantId);
+            var model = repo.GetModel(timelineId);
+            return WrapResponse(JsonConvert.SerializeObject(model));
+        }
+
         #endregion
-        
     }
 }
