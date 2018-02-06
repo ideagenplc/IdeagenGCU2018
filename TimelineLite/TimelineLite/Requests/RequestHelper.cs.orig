@@ -24,11 +24,15 @@ namespace TimelineLite.Requests
 
         public static T ParsePutRequestBody<T>(APIGatewayProxyRequest request) where T : BaseRequest
         {
+<<<<<<< HEAD
+            var parsedRequest = JsonConvert.DeserializeObject<T>(request.Body).AuthoriseRequest();
+            AWSXRayRecorder.Instance.AddAnnotation("Tenant", parsedRequest.TenantId);
+            return parsedRequest;
+=======
             if (request.HttpMethod != "PUT")
                 throw new HttpRequestException("Request is not a PUT");
-            var parsedRequest = JsonConvert.DeserializeObject<T>(request.Body);
-            AWSXRayRecorder.Instance.AddAnnotation("Tenant", parsedRequest.TenantId);
             return JsonConvert.DeserializeObject<T>(request.Body).AuthorisePutRequest();
+>>>>>>> d9c070d6b18d377bdbb199990caa69d071c5f2b6
         }
 
         private static T AuthorisePutRequest<T>(this T request) where T : BaseRequest
@@ -42,7 +46,11 @@ namespace TimelineLite.Requests
                 return request;
             throw new AuthenticationException($"Invalid Authorisation Token: {request.AuthToken}");
         }
+<<<<<<< HEAD
+        
+=======
 
+>>>>>>> d9c070d6b18d377bdbb199990caa69d071c5f2b6
         public static string AuthoriseGetRequest<T>(this T request) where T : APIGatewayProxyRequest
         {
             if (request.HttpMethod != "GET")

@@ -55,7 +55,11 @@ namespace TimelineLite.StorageRepos
 
         public void SaveModel(TimelineModel model)
         {
-            Context.SaveAsync(model).Wait();
+<<<<<<< HEAD
+            _context.SaveAsync(model).Wait();;
+=======
+            Context.SaveAsync(model);
+>>>>>>> aacb7dfdb7292cc288e63ea03a3db1bbe058540a
         }
     }
 }

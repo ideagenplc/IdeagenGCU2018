@@ -33,7 +33,7 @@ namespace TimelineLite.StorageRepos
         }
         
         // Skip is the Id of the last value returned in the previous query;
-        protected string CreatePaginationToken(int skip)
+        protected string CreatePaginationToken(object skip)
         {
             var pageToken = $"{{\"Id\":{{\"S\":\"{skip}\"}},\"TenantId\":{{\"S\":\"{TenantId}\"}}}}";
             return pageToken;
