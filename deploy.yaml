@@ -96,7 +96,7 @@ Resources:
                  Path: /Timeline/UnlinkEvent
                  Method: put
 
-    UnlinkEventFromTimelineFunction:
+    GetLinkedEvents:
         Type: AWS::Serverless::Function
         Properties:
            Handler: TimelineLite::TimelineLite.Timeline::GetEvents
@@ -112,7 +112,7 @@ Resources:
              GetResource:
                Type: Api
                Properties:
-                 Path: /Timeline/GetEvents
+                 Path: /Timeline/GetEvents/
                  Method: put
 
     CreateTimelineEventFunction:

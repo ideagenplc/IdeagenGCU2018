@@ -159,17 +159,25 @@ namespace TimelineLite
         
         private static APIGatewayProxyResponse GetLinkedEvents(APIGatewayProxyRequest request)
         {
+            var tenantId = request.AuthoriseGetRequest();
+            var timeLineId = request.Headers["TimelineId"];
+            var skip = request.Headers["Skip"];
+            
+            if(string.IsNullOrWhiteSpace(tenantId))
+                throw new ValidationException($"Invalid Tenant Id {tenantId}");
+
+            if (string.IsNullOrWhiteSpace(skip))
+                skip = "0";
+            
 //            var getLinkedEventsRequest = ParseRequestBody<GetEventsOnTimelineRequest>(request);
 //
 //            if (string.IsNullOrWhiteSpace(getLinkedEventsRequest.TimelineId))
 //                return WrapResponse("Invalid Timeline Id", 400);
 //
-//            var linkRepo = new DynamoDbTimelineEventLinkRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
-//                getLinkedEventsRequest.TenantId);
-//            var events = linkRepo.GetLinks(getLinkedEventsRequest.TimelineId,
-//                request.PathParameters["pageToken"] ?? string.Empty);
-//            return WrapResponse($"OK");
-            return WrapResponse($"OK");
+           var linkRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+                tenantId);
+            var events = linkRepo.GetLinkedEvents(timeLineId, skip);
+            return WrapResponse(events);
         }
         
         #endregion

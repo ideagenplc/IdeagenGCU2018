@@ -6,6 +6,7 @@ using Amazon;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.SimpleDB;
 using Amazon.SimpleDB.Model;
+using Amazon.XRay.Recorder.Core;
 using Newtonsoft.Json;
 using TimelineLite.Core;
 
@@ -22,7 +23,9 @@ namespace TimelineLite.Requests
         
         public static T ParseRequestBody<T>(APIGatewayProxyRequest request) where T : BaseRequest
         {
-            return JsonConvert.DeserializeObject<T>(request.Body).AuthoriseRequest();
+            var parsedRequest = JsonConvert.DeserializeObject<T>(request.Body).AuthoriseRequest();
+            AWSXRayRecorder.Instance.AddAnnotation("Tenant", parsedRequest.TenantId);
+            return parsedRequest;
         }
 
         private static T AuthoriseRequest<T>(this T request) where T : BaseRequest
@@ -37,7 +40,7 @@ namespace TimelineLite.Requests
             }
         }
         
-        private static string AuthoriseGetRequest<T>(this T request) where T : APIGatewayProxyRequest
+        public static string AuthoriseGetRequest<T>(this T request) where T : APIGatewayProxyRequest
         {
             if (request.HttpMethod != "GET")
                 throw new HttpRequestException("Request is not a GET");
