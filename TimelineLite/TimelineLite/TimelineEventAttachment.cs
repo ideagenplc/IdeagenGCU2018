@@ -32,7 +32,7 @@ namespace TimelineLite
         
         private static APIGatewayProxyResponse CreateAttachment(APIGatewayProxyRequest request)
         {
-            var timelineEventAttachmentRequest = ParseRequestBody<CreateTimelineEventAttachmentRequest>(request);
+            var timelineEventAttachmentRequest = ParsePutRequestBody<CreateTimelineEventAttachmentRequest>(request);
             ValidateTimelineEventAttachmentId(timelineEventAttachmentRequest.AttachmentId);
             ValidateTimelineEventAttachentTitle(timelineEventAttachmentRequest.AttachmentId);
             ValidateTimelineEventId(timelineEventAttachmentRequest.AttachmentId);
@@ -50,7 +50,7 @@ namespace TimelineLite
         
         private static APIGatewayProxyResponse EditAttachmentTitle(APIGatewayProxyRequest request)
         {
-            var timelineEventAttachmentRequest = ParseRequestBody<EditTimelineEventAttachmentTitleRequest>(request);
+            var timelineEventAttachmentRequest = ParsePutRequestBody<EditTimelineEventAttachmentTitleRequest>(request);
 
             ValidateTimelineEventAttachmentId(timelineEventAttachmentRequest.AttachmentId);
             ValidateTimelineEventAttachentTitle(timelineEventAttachmentRequest.AttachmentId);
@@ -64,7 +64,7 @@ namespace TimelineLite
         
         private static APIGatewayProxyResponse DeleteAttachment(APIGatewayProxyRequest request)
         {
-            var timelineEventAttachmentRequest = ParseRequestBody<DeleteTimelineEventAttachmentRequest>(request);
+            var timelineEventAttachmentRequest = ParsePutRequestBody<DeleteTimelineEventAttachmentRequest>(request);
 
             ValidateTimelineEventAttachmentId(timelineEventAttachmentRequest.AttachmentId);
             

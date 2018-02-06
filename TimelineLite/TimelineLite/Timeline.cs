@@ -61,7 +61,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse CreateTimeline(APIGatewayProxyRequest request)
         {
-            var createTimelineRequest = ParseRequestBody<CreateTimelineRequest>(request);
+            var createTimelineRequest = ParsePutRequestBody<CreateTimelineRequest>(request);
 
             if (string.IsNullOrWhiteSpace(createTimelineRequest.TimelineId))
                 throw new ValidationException("Invalid Timeline Id");
@@ -84,7 +84,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse EditTimelineTitle(APIGatewayProxyRequest request)
         {
-            var editTimelineTitleRequest = ParseRequestBody<EditTimelineTitleRequest>(request);
+            var editTimelineTitleRequest = ParsePutRequestBody<EditTimelineTitleRequest>(request);
 
             if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
                 return WrapResponse("Invalid Timeline Id", 400);
@@ -101,7 +101,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse DeleteTimeline(APIGatewayProxyRequest request)
         {
-            var editTimelineTitleRequest = ParseRequestBody<DeleteTimelineRequest>(request);
+            var editTimelineTitleRequest = ParsePutRequestBody<DeleteTimelineRequest>(request);
 
             if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
                 return WrapResponse("Invalid Timeline Id", 400);
@@ -116,7 +116,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse LinkEventToTimeline(APIGatewayProxyRequest request)
         {
-            var linkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
+            var linkRequest = ParsePutRequestBody<LinkEventToTimelineRequest>(request);
 
             if (string.IsNullOrWhiteSpace(linkRequest.TimelineId))
                 return WrapResponse("Invalid Timeline Id", 400);

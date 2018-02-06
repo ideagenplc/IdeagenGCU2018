@@ -15,46 +15,46 @@ namespace TimelineLite.Requests
     {
         private static readonly IAmazonSimpleDB _simpleDbClient;
         private static readonly string _tableName = "GCUProject-Config";
+
         static RequestHelper()
         {
             _simpleDbClient = new AmazonSimpleDBClient(RegionEndpoint.EUWest1);
         }
-        
-        public static T ParseRequestBody<T>(APIGatewayProxyRequest request) where T : BaseRequest
+
+        public static T ParsePutRequestBody<T>(APIGatewayProxyRequest request) where T : BaseRequest
         {
-            return JsonConvert.DeserializeObject<T>(request.Body).AuthoriseRequest();
+            if (request.HttpMethod != "PUT")
+                throw new HttpRequestException("Request is not a PUT");
+            return JsonConvert.DeserializeObject<T>(request.Body).AuthorisePutRequest();
         }
 
-        private static T AuthoriseRequest<T>(this T request) where T : BaseRequest
+        private static T AuthorisePutRequest<T>(this T request) where T : BaseRequest
         {
+            if (string.IsNullOrWhiteSpace(request.AuthToken))
+                throw new AuthenticationException("Body: AuthToken has not been set on PUT Request");
+            if (string.IsNullOrWhiteSpace(request.TenantId))
+                throw new AuthenticationException("Body: TenantId has not been set on PUT Request");
             var authToken = GetAuthToken(request.TenantId);
-            
             if (authToken == request.AuthToken)
-            return request;
-            else
-            {
-                throw new AuthenticationException($"Invalid Authorisation Token: {request.AuthToken}");
-            }
+                return request;
+            throw new AuthenticationException($"Invalid Authorisation Token: {request.AuthToken}");
         }
-        
+
         public static string AuthoriseGetRequest<T>(this T request) where T : APIGatewayProxyRequest
         {
             if (request.HttpMethod != "GET")
                 throw new HttpRequestException("Request is not a GET");
-            var tenant = request.Headers["GCU-TenantId"];
+            var tenant = request.Headers["TenantId"];
             if (string.IsNullOrWhiteSpace(tenant))
-                throw new AuthenticationException("Header: GCU-TenantId hs not been set on GET Request");
+                throw new AuthenticationException("Header: TenantId has not been set on GET Request");
             var authToken = GetAuthToken(tenant);
-            var recievedAuthToken = request.Headers["GCU-AuthToken"];
+            var recievedAuthToken = request.Headers["AuthToken"];
             if (string.IsNullOrWhiteSpace(recievedAuthToken))
-                throw new AuthenticationException("Header: GCU-AuthToken hs not been set on GET Request");
-            
+                throw new AuthenticationException("Header: AuthToken has not been set on GET Request");
+
             if (authToken == recievedAuthToken)
                 return tenant;
-            else
-            {
-                throw new AuthenticationException($"Invalid Authorisation Token: {recievedAuthToken}");
-            }
+            throw new AuthenticationException($"Invalid Authorisation Token: {recievedAuthToken}");
         }
 
         private static string GetAuthToken(string tenantId)
@@ -68,7 +68,8 @@ namespace TimelineLite.Requests
             }
             catch (Exception)
             {
-                throw new AuthenticationException($"Error retrieving authentication token. Is {tenantId} a valid tenantId?");
+                throw new AuthenticationException(
+                    $"Error retrieving authentication token. Is {tenantId} a valid tenantId?");
             }
             return authToken;
         }

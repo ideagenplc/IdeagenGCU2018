@@ -59,7 +59,7 @@ namespace TimelineLite
         private static APIGatewayProxyResponse CreateTimelineEvent(APIGatewayProxyRequest request)
         {
             Log("Create Timeline Request recieved");
-            var timelineEventRequest = ParseRequestBody<CreateTimelineEventRequest>(request);
+            var timelineEventRequest = ParsePutRequestBody<CreateTimelineEventRequest>(request);
 
             Log($"Request parsed {timelineEventRequest}");
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
@@ -83,7 +83,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse EditTimelineEventTitle(APIGatewayProxyRequest request)
         {
-            var timelineEventRequest = ParseRequestBody<EditTimelineEventTitleRequest>(request);
+            var timelineEventRequest = ParsePutRequestBody<EditTimelineEventTitleRequest>(request);
 
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
             ValidateTimelineEventTitle(timelineEventRequest.Title);
@@ -97,7 +97,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse EditTimelineEventDescription(APIGatewayProxyRequest request)
         {
-            var timelineEventRequest = ParseRequestBody<EditTimelineEventDescriptionRequest>(request);
+            var timelineEventRequest = ParsePutRequestBody<EditTimelineEventDescriptionRequest>(request);
 
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
 
@@ -110,7 +110,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse EditTimelineEventDateTime(APIGatewayProxyRequest request)
         {
-            var timelineEventRequest = ParseRequestBody<EditTimelineEventDateTimeRequest>(request);
+            var timelineEventRequest = ParsePutRequestBody<EditTimelineEventDateTimeRequest>(request);
 
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
             ValidateTimelineEventDateTime(timelineEventRequest.EventDateTime);
@@ -124,7 +124,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse DeleteTimelineEvent(APIGatewayProxyRequest request)
         {
-            var timelineEventRequest = ParseRequestBody<DeleteTimelineEventRequest>(request);
+            var timelineEventRequest = ParsePutRequestBody<DeleteTimelineEventRequest>(request);
 
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
 
@@ -137,7 +137,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse LinkTimelineEvents(APIGatewayProxyRequest request)
         {
-            var timelineEventRequest = ParseRequestBody<LinkTimelineEventToTimelineEventRequest>(request);
+            var timelineEventRequest = ParsePutRequestBody<LinkTimelineEventToTimelineEventRequest>(request);
 
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
             if (string.IsNullOrWhiteSpace(timelineEventRequest.LinkedToTimelineEventId))
@@ -159,7 +159,7 @@ namespace TimelineLite
 
         private static APIGatewayProxyResponse UnlinkTimelineEvents(APIGatewayProxyRequest request)
         {
-            var timelineEventRequest = ParseRequestBody<UnlinkTimelineEventToTimelineEventRequest>(request);
+            var timelineEventRequest = ParsePutRequestBody<UnlinkTimelineEventToTimelineEventRequest>(request);
 
             ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
             if (string.IsNullOrWhiteSpace(timelineEventRequest.UnlinkedFromTimelineEventId))
