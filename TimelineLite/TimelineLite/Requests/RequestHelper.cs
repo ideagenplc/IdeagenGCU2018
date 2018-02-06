@@ -26,7 +26,7 @@ namespace TimelineLite.Requests
         {
             if (request.HttpMethod != "PUT")
                 throw new HttpRequestException("Request is not a PUT");
-            var parsedRequest = JsonConvert.DeserializeObject<T>(request.Body).AuthoriseRequest();
+            var parsedRequest = JsonConvert.DeserializeObject<T>(request.Body);
             AWSXRayRecorder.Instance.AddAnnotation("Tenant", parsedRequest.TenantId);
             return JsonConvert.DeserializeObject<T>(request.Body).AuthorisePutRequest();
         }
