@@ -5,10 +5,10 @@ using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
-using TimelineLite.Logging;
 using TimelineLite.Requests;
 using TimelineLite.Requests.TimelineEvents;
 using TimelineLite.StorageModels;
+using TimelineLite.StorageRepos;
 using static TimelineLite.Requests.RequestHelper;
 using static TimelineLite.Responses.ResponseHelper;
 
@@ -52,6 +52,11 @@ namespace TimelineLite
         }
         
         public APIGatewayProxyResponse GetLinkedEvents(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => GetLinkedTimelineEvents(request));
+        }
+        
+        public APIGatewayProxyResponse GetAttachments(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => GetLinkedTimelineEvents(request));
         }
@@ -187,9 +192,31 @@ namespace TimelineLite
 
             var repo = GetRepo(tenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventId);
-            var timelineEventLinkedModels =
-                repo.GetTimelineEventLinks(eventModel.Id, int.Parse(skip));
+            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id, int.Parse(skip));
+            
+            Log($"Skipping: {skip}");
+            Log("Returning linked timeline events");
+            foreach (var linkedModel in timelineEventLinkedModels)
+            {
+                Log(linkedModel.ToString());
+            }
 
+            return WrapResponse($"{JsonConvert.SerializeObject(timelineEventLinkedModels)}");
+        }
+        
+        
+        private static APIGatewayProxyResponse GetTimelineEventAttachments(APIGatewayProxyRequest request)
+        {
+            var tenantId = request.AuthoriseGetRequest();
+            var timelineEventId = request.Headers["TimelineEventId"];
+            var skip = request.Headers["Skip"];
+            ValidateTimelineEventId(timelineEventId);
+            ValidateTimelineEventSkip(skip);
+
+            var repo = GetRepo(tenantId);
+            var eventModel = repo.GetTimelineEventModel(timelineEventId);
+            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id, int.Parse(skip));
+            
             Log($"Skipping: {skip}");
             Log("Returning linked timeline events");
             foreach (var linkedModel in timelineEventLinkedModels)

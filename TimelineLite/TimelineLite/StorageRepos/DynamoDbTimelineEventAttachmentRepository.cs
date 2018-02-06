@@ -1,28 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using TimelineLite.StorageModels;
 
-namespace TimelineLite
+namespace TimelineLite.StorageRepos
 {
     public class DynamoDbTimelineEventAttachmentRepository
     {
-        private static IAmazonDynamoDB _client;
         private static DynamoDBContext _context;
-        private string _tenantId;
+        private readonly string _tenantId;
 
         public DynamoDbTimelineEventAttachmentRepository(IAmazonDynamoDB client, string tenantId)
         {
-            _client = client;
             _tenantId = tenantId;
-            _context = new DynamoDBContext(_client);
+            _context = new DynamoDBContext(client);
         }
 
         public void CreateTimlineEventAttachment(TimelineEventAttachmentModel model)
         { 
+            model.TenantId = _tenantId;
             _context.SaveAsync(model).Wait();
         }
 
@@ -39,7 +37,7 @@ namespace TimelineLite
 
         public void SaveModel(TimelineEventAttachmentModel model)
         {
-            _context.SaveAsync(model);
+            _context.SaveAsync(model).Wait();;
         }
     
     }

@@ -5,7 +5,7 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using TimelineLite.StorageModels;
 
-namespace TimelineLite
+namespace TimelineLite.StorageRepos
 {
     public class DynamoDbTimelineRepository
     {
@@ -50,7 +50,7 @@ namespace TimelineLite
 
         public void SaveModel(TimelineModel model)
         {
-            _context.SaveAsync(model);
+            _context.SaveAsync(model).Wait();;
         }
     }
 }

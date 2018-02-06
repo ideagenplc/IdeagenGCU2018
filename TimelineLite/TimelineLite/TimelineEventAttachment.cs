@@ -1,13 +1,12 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
-using TimelineLite.Logging;
 using TimelineLite.Requests.TimelineEventAttachments;
 using TimelineLite.StorageModels;
+using TimelineLite.StorageRepos;
 using static TimelineLite.Requests.RequestHelper;
 using static TimelineLite.Responses.ResponseHelper;
 
@@ -34,8 +33,8 @@ namespace TimelineLite
         {
             var timelineEventAttachmentRequest = ParsePutRequestBody<CreateTimelineEventAttachmentRequest>(request);
             ValidateTimelineEventAttachmentId(timelineEventAttachmentRequest.AttachmentId);
-            ValidateTimelineEventAttachentTitle(timelineEventAttachmentRequest.AttachmentId);
-            ValidateTimelineEventId(timelineEventAttachmentRequest.AttachmentId);
+            ValidateTimelineEventAttachentTitle(timelineEventAttachmentRequest.Title);
+            ValidateTimelineEventId(timelineEventAttachmentRequest.TimelineEventId);
 
             var timelineEventAttachment = new TimelineEventAttachmentModel
             {
@@ -53,7 +52,7 @@ namespace TimelineLite
             var timelineEventAttachmentRequest = ParsePutRequestBody<EditTimelineEventAttachmentTitleRequest>(request);
 
             ValidateTimelineEventAttachmentId(timelineEventAttachmentRequest.AttachmentId);
-            ValidateTimelineEventAttachentTitle(timelineEventAttachmentRequest.AttachmentId);
+            ValidateTimelineEventAttachentTitle(timelineEventAttachmentRequest.Title);
             
             var repo = GetRepo(timelineEventAttachmentRequest.TenantId);
             var model = repo.GetModel(timelineEventAttachmentRequest.AttachmentId);
