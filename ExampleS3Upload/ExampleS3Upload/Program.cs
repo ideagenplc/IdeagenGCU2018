@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace ExampleS3Upload
@@ -39,7 +33,8 @@ namespace ExampleS3Upload
             }
 
             var response = httpRequest.GetResponse() as HttpWebResponse;
-            Console.WriteLine(response);
+            Console.WriteLine($"Response status code: {response.StatusCode}");
+            Console.ReadLine();
         }
 
         private static string GeneratePreSignedUrl(string filePath)
