@@ -1,17 +1,9 @@
 using System;
-using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
-using Amazon.Lambda.Core;
-using Amazon.XRay;
 using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
-using Newtonsoft.Json;
 using TimelineLite.Core;
-using TimelineLite.Logging;
-using TimelineLite.Requests;
-using TimelineLite.StorageModels;
-using static TimelineLite.Requests.RequestHelper;
 using static TimelineLite.Responses.ResponseHelper;
 namespace TimelineLite
 {
