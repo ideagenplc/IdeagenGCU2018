@@ -64,6 +64,7 @@ namespace TimelineLite
             var presignedUrl = s3Client.GetPreSignedURL(new GetPreSignedUrlRequest
             {
                 BucketName = "stewartw-test-bucket",
+                Verb = HttpVerb.PUT,
                 Key = $"{tenantId}/{attachmentId}"
             });
             return WrapResponse(presignedUrl);

@@ -1,9 +1,6 @@
 using System;
 using Amazon.Lambda.APIGatewayEvents;
-using Amazon.Lambda.Core;
-using Amazon.XRay;
 using Amazon.XRay.Recorder.Core;
-using Newtonsoft.Json;
 using TimelineLite.Core;
 using static TimelineLite.Responses.ResponseHelper;
 namespace TimelineLite
