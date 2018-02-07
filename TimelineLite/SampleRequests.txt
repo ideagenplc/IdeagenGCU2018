@@ -4,15 +4,15 @@
     "AuthToken" : "1337",
     "TimelineId":"94f1106b-ca06-4bb8-927f-f9c3c713de2f",
     "Title":"Grounded Flight: F12FR"
-} 
+}
 // Update Title
 {
     "TenantId" : "IDGDev",
     "AuthToken" : "1337",
     "TimelineId":"94f1106b-ca06-4bb8-927f-f9c3c713de2f",
     "Title":"New Title 2"
-} 
+}
 // Get Timeline
-GCU-TenantId:IDGDev
-GCU-AuthToken:1337
+TenantId:IDGDev
+AuthToken:1337
 TimelineId:94f1106b-ca06-4bb8-927f-f9c3c713de2f

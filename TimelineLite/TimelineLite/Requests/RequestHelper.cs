@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices.ComTypes;
 using Amazon;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.SimpleDB;
@@ -47,11 +48,11 @@ namespace TimelineLite.Requests
         {
             if (request.HttpMethod != "GET")
                 throw new HttpRequestException("Request is not a GET");
-            var tenant = request.Headers["TenantId"];
+            request.Headers.TryGetValue("TenantId", out var tenant);
             if (string.IsNullOrWhiteSpace(tenant))
                 throw new AuthenticationException("Header: TenantId has not been set on GET Request");
             var authToken = GetAuthToken(tenant);
-            var recievedAuthToken = request.Headers["AuthToken"];
+            request.Headers.TryGetValue("AuthToken", out var recievedAuthToken);
             if (string.IsNullOrWhiteSpace(recievedAuthToken))
                 throw new AuthenticationException("Header: AuthToken has not been set on GET Request");
 

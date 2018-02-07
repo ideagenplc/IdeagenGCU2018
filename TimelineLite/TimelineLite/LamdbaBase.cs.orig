@@ -1,6 +1,11 @@
 using System;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.XRay.Recorder.Core;
+<<<<<<< HEAD:TimelineLite/TimelineLite/LambaBase.cs
+=======
+using Amazon.XRay.Recorder.Handlers.AwsSdk;
+using Newtonsoft.Json;
+>>>>>>> fb213a93fde2a0ff96af15c8c3a35c14c73c86c0:TimelineLite/TimelineLite/LamdbaBase.cs
 using TimelineLite.Core;
 using static TimelineLite.Responses.ResponseHelper;
 namespace TimelineLite
@@ -9,24 +14,18 @@ namespace TimelineLite
     {
         protected static APIGatewayProxyResponse Handle(Func<APIGatewayProxyResponse> handler)
         {
-            AWSXRayRecorder.Instance.BeginSubsegment("Handling Request");
+            AWSSDKHandler.RegisterXRay<IAmazonDynamoDB>();
             try
             {
-                return handler.Invoke();
+                return AWSXRayRecorder.Instance.TraceMethod("Handling", handler.Invoke);
             }
             catch (GCUException e)
             {
-                AWSXRayRecorder.Instance.AddException(e);
                 return WrapResponse(e.Message, 400);
             }
             catch (Exception e)
             {
-                AWSXRayRecorder.Instance.AddException(e);
                 return WrapResponse($"Unexpected Exception : {e.Message}", 500);
-            }
-            finally
-            {
-                AWSXRayRecorder.Instance.EndSubsegment();
             }
         }
 
