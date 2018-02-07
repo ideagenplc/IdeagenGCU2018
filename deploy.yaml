@@ -160,6 +160,7 @@ Resources:
                Properties:
                  Path: /TimelineEvent/Create
                  Method: put
+                 
     LinkTimelineEventsFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -182,6 +183,7 @@ Resources:
                Properties:
                  Path: /TimelineEvent/LinkEvents
                  Method: put
+                 
     GetTimelineFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -226,6 +228,25 @@ Resources:
                Type: Api
                Properties:
                  Path: /TimelineEvent/GetLinkedTimelineEvents
+                 Method: get
+                 
+    GenerateAttachmentPresignedUrl:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite::TimelineLite.TimelineEventAttachment::GeneratePresignedUrl
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+           Timeout: 15
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEventAttachment/GenerateAttachmentPresignedUrl
                  Method: get
 
     TimelineStorage:

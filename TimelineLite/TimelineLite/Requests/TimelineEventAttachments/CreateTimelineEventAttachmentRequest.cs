@@ -5,5 +5,6 @@
         public string AttachmentId;
         public string TimelineEventId;
         public string Title;
+        public string Attachment;
     }
 }

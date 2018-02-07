@@ -5,9 +5,9 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
 using TimelineLite.Core;
-using TimelineLite.Logging;
 using TimelineLite.Requests;
 using TimelineLite.StorageModels;
+using TimelineLite.StorageRepos;
 using static TimelineLite.Requests.RequestHelper;
 using static TimelineLite.Responses.ResponseHelper;
 

@@ -26,25 +26,11 @@ namespace TimelineLite.StorageRepos
             Context.SaveAsync(model).Wait();
         }
         
-        public void DeleteLink(string timelineId, string eventId)
-        {
-            var table = Context.GetTargetTable<TimelineTimelineEventLinkModel>();
-            var filter = CreateBaseQueryFilter();
-            filter.AddCondition(nameof(TimelineTimelineEventLinkModel.TimelineId), QueryOperator.Equal, timelineId);
-            filter.AddCondition(nameof(TimelineTimelineEventLinkModel.TimelineEventId), ScanOperator.Equal, eventId);
-            
-            var config = CreateQueryConfiguration(filter);
-            var search = table.Query(config);
-            var model = Context.FromDocuments<TimelineTimelineEventLinkModel>(search.GetRemainingAsync().Result).Single();
-            
-            Context.DeleteAsync<TimelineTimelineEventLinkModel>(model).Wait();
-        }
-        
         public IEnumerable<TimelineTimelineEventLinkModel> GetLinkedEvents(string timelineId, string skip = "0")
         {
-            var pageToken = skip != "0" ? CreatePaginationToken(skip) : "{}";
+            var pageToken = CreatePaginationToken(skip);
             
-            var timelineEventLinkTable = Context.GetTargetTable<TimelineTimelineEventLinkModel>();
+            var timelineEventLinkTable = Context.GetTargetTable<TimelineEventLinkModel>();
             var filter = CreateBaseQueryFilter();
             filter.AddCondition(nameof(TimelineTimelineEventLinkModel.TimelineId), QueryOperator.Equal, timelineId);
             
@@ -57,23 +43,23 @@ namespace TimelineLite.StorageRepos
         
         public TimelineModel GetModel(string id)
         {
-            var table = Context.GetTargetTable<TimelineModel>();
-            var filter = CreateBaseQueryFilter();
-            filter.AddCondition(nameof(TimelineModel.Id), QueryOperator.Equal, id);
             var conditions = new List<ScanCondition>
             {
                 new ScanCondition(nameof(TimelineModel.Id), ScanOperator.Equal, id),
                 new ScanCondition(nameof(TimelineModel.TenantId), ScanOperator.Equal, TenantId),
                 new ScanCondition(nameof(TimelineModel.IsDeleted), ScanOperator.Equal, false)
             };
-            var config = CreateQueryConfiguration(filter);
-            var search = table.Query(config);
-            return Context.FromDocuments<TimelineModel>(search.GetRemainingAsync().Result).Single();
+            
+            return Context.ScanAsync<TimelineModel>(conditions).GetRemainingAsync().Result.Single();
         }
 
         public void SaveModel(TimelineModel model)
         {
-            Context.SaveAsync(model).Wait();
+<<<<<<< HEAD
+            _context.SaveAsync(model).Wait();;
+=======
+            Context.SaveAsync(model);
+>>>>>>> aacb7dfdb7292cc288e63ea03a3db1bbe058540a
         }
     }
 }

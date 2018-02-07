@@ -3,19 +3,19 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using TimelineLite.StorageModels;
 
-namespace TimelineLite
+namespace TimelineLite.StorageRepos
 {
     public abstract class BaseRepository
     {
         protected readonly string TenantId;
-        protected DynamoDBContext Context;
+        protected readonly DynamoDBContext Context;
 
         protected BaseRepository(string tenantId, IAmazonDynamoDB client)
         {
             TenantId = tenantId;
             Context = new DynamoDBContext(client);
         }
-        protected QueryOperationConfig CreateQueryConfiguration(QueryFilter filter, int pageSize = 20, string pageToken = "{}")
+        protected static QueryOperationConfig CreateQueryConfiguration(QueryFilter filter, int pageSize = 20, string pageToken = "{}")
         {
             var queryOperationConfig = new QueryOperationConfig
             {
