@@ -102,7 +102,6 @@ namespace TimelineLite
         private static APIGatewayProxyResponse DeleteTimeline(APIGatewayProxyRequest request)
         {
             var editTimelineTitleRequest = ParsePutRequestBody<DeleteTimelineRequest>(request);
-
             if (string.IsNullOrWhiteSpace(editTimelineTitleRequest.TimelineId))
                 return WrapResponse("Invalid Timeline Id", 400);
 
@@ -125,8 +124,6 @@ namespace TimelineLite
 
             var timelineRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
                 linkRequest.TenantId);
-            var linkRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
-                linkRequest.TenantId);
 
 
             var model = timelineRepo.GetModel(linkRequest.TimelineId);
@@ -137,23 +134,23 @@ namespace TimelineLite
                 Id = Guid.NewGuid().ToString()
             };
 
-            linkRepo.CreateLink(linkModel);
+            timelineRepo.CreateLink(linkModel);
             return WrapResponse($"OK");
         }
 
         private static APIGatewayProxyResponse UnlinkEventFromTimeline(APIGatewayProxyRequest request)
         {
-//            var unlinkRequest = ParseRequestBody<LinkEventToTimelineRequest>(request);
-//
-//            if (string.IsNullOrWhiteSpace(unlinkRequest.TimelineId))
-//                return WrapResponse("Invalid Timeline Id", 400);
-//            if (string.IsNullOrWhiteSpace(unlinkRequest.EventId))
-//                return WrapResponse("Invalid Event Id", 400);
-//
-//            var linkRepo = new DynamoDbTimelineEventLinkRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
-//                unlinkRequest.TenantId);
-//
-//            linkRepo.DeleteLink(unlinkRequest.TimelineId, unlinkRequest.EventId);
+            var unlinkRequest = ParsePutRequestBody<LinkEventToTimelineRequest>(request);
+
+            if (string.IsNullOrWhiteSpace(unlinkRequest.TimelineId))
+                return WrapResponse("Invalid Timeline Id", 400);
+            if (string.IsNullOrWhiteSpace(unlinkRequest.EventId))
+                return WrapResponse("Invalid Event Id", 400);
+
+            var linkRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+                unlinkRequest.TenantId);
+
+            linkRepo.DeleteLink(unlinkRequest.TimelineId, unlinkRequest.EventId);
             return WrapResponse($"OK");
         }
 
@@ -162,19 +159,14 @@ namespace TimelineLite
             var tenantId = request.AuthoriseGetRequest();
             var timeLineId = request.Headers["TimelineId"];
             var skip = request.Headers["Skip"];
-            
-            if(string.IsNullOrWhiteSpace(tenantId))
+
+            if (string.IsNullOrWhiteSpace(tenantId))
                 throw new ValidationException($"Invalid Tenant Id {tenantId}");
 
             if (string.IsNullOrWhiteSpace(skip))
                 skip = "0";
-            
-//            var getLinkedEventsRequest = ParseRequestBody<GetEventsOnTimelineRequest>(request);
-//
-//            if (string.IsNullOrWhiteSpace(getLinkedEventsRequest.TimelineId))
-//                return WrapResponse("Invalid Timeline Id", 400);
-//
-           var linkRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
+
+            var linkRepo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
                 tenantId);
             var events = linkRepo.GetLinkedEvents(timeLineId, skip);
             return WrapResponse(events);
@@ -183,15 +175,16 @@ namespace TimelineLite
         private static APIGatewayProxyResponse GetTimeline(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            var timelineId = request.Headers["TimelineId"];
+            request.Headers.TryGetValue("TimelineId", out var timelineId);
 
             if (string.IsNullOrWhiteSpace(timelineId))
-                return WrapResponse("Invalid Timeline Id", 400);
+                throw new ValidationException($"Invalid Timeline Id: {timelineId}");
 
             var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
                 tenantId);
             var model = repo.GetModel(timelineId);
-            return WrapResponse(JsonConvert.SerializeObject(model));
+           // return WrapResponse(JsonConvert.SerializeObject(model));
+            return WrapResponse("OK");
         }
 
         #endregion

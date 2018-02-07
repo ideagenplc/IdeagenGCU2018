@@ -1,6 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Resources:
+
     CreateTimelineFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -11,8 +12,12 @@ Resources:
              -
                AmazonDynamoDBFullAccess
              -
+               AWSXrayFullAccess
+             -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
            Timeout: 15
+           MemorySize: 1024
+           Tracing: Active
            Events:
              GetResource:
                Type: Api
@@ -30,8 +35,12 @@ Resources:
              -
                AmazonDynamoDBFullAccess
              -
+               AWSXrayFullAccess
+             -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
            Timeout: 15
+           MemorySize: 1024
+           Tracing: Active
            Events:
              GetResource:
                Type: Api
@@ -51,6 +60,8 @@ Resources:
              -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
            Timeout: 15
+           MemorySize: 1024
+           Tracing: Active
            Events:
              GetResource:
                Type: Api
@@ -68,8 +79,12 @@ Resources:
              -
                AmazonDynamoDBFullAccess
              -
+               AWSXrayFullAccess
+             -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
            Timeout: 15
+           MemorySize: 1024
+           Tracing: Active
            Events:
              GetResource:
                Type: Api
@@ -88,7 +103,11 @@ Resources:
                AmazonDynamoDBFullAccess
              -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
            Timeout: 15
+           MemorySize: 1024
+           Tracing: Active
            Events:
              GetResource:
                Type: Api
@@ -107,13 +126,17 @@ Resources:
                AmazonDynamoDBFullAccess
              -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
            Timeout: 15
+           MemorySize: 1024
+           Tracing: Active
            Events:
              GetResource:
                Type: Api
                Properties:
                  Path: /Timeline/GetEvents/
-                 Method: put
+                 Method: get
 
     CreateTimelineEventFunction:
         Type: AWS::Serverless::Function
@@ -126,7 +149,11 @@ Resources:
                AmazonDynamoDBFullAccess
              -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
            Timeout: 15
+           MemorySize: 1024
+           Tracing: Active
            Events:
              GetResource:
                Type: Api
@@ -144,7 +171,11 @@ Resources:
                AmazonDynamoDBFullAccess
              -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
            Timeout: 15
+           MemorySize: 1024
+           Tracing: Active
            Events:
              GetResource:
                Type: Api
@@ -162,7 +193,11 @@ Resources:
                AmazonDynamoDBFullAccess
              -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
            Timeout: 15
+           Tracing: Active
+           MemorySize: 1024
            Events:
              GetResource:
                Type: Api
@@ -181,7 +216,11 @@ Resources:
                AmazonDynamoDBFullAccess
              -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
            Timeout: 15
+           Tracing: Active
+           MemorySize: 1024
            Events:
              GetResource:
                Type: Api
@@ -250,6 +289,47 @@ Resources:
           WriteCapacityUnits: 5
 
         TableName: "TimelineEventLinkStore"
+
+    TimelineTimelineEventLinkStorage:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+            -
+              AttributeName: Id
+              AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
+            -
+              AttributeName: TimelineId
+              AttributeType: S
+        KeySchema:
+            -
+              AttributeName: TenantId
+              KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
+
+        GlobalSecondaryIndexes:
+            -
+                IndexName: TimelineId-Index
+                KeySchema:
+                    -
+                        AttributeName: TimelineId
+                        KeyType: HASH
+                Projection:
+                    ProjectionType: ALL
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 5
+                    WriteCapacityUnits: 5
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+        TableName: "TimelineTimelineEventLinkStore"
+
     EventStorage:
       Type: AWS::DynamoDB::Table
       Properties:

@@ -2,7 +2,7 @@
 
 namespace TimelineLite.StorageModels
 {
-    [DynamoDBTable("TimelineEventLinkStore")]
+    [DynamoDBTable("TimelineTimelineEventLinkStore")]
     public class TimelineTimelineEventLinkModel : BaseModel
     {
         public string TimelineEventId { get; set; }

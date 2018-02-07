@@ -26,11 +26,23 @@ namespace TimelineLite
             Context.SaveAsync(model).Wait();
         }
         
+        public void DeleteLink(string timelineId, string eventId)
+        {
+            var conditions = new List<ScanCondition>
+            {
+                new ScanCondition(nameof(TimelineTimelineEventLinkModel.TenantId), ScanOperator.Equal, TenantId),
+                new ScanCondition(nameof(TimelineTimelineEventLinkModel.TimelineEventId), ScanOperator.Equal, eventId),
+                new ScanCondition(nameof(TimelineTimelineEventLinkModel.TimelineId), ScanOperator.Equal, timelineId)
+            };
+            var model = Context.ScanAsync<TimelineEventLinkModel>(conditions).GetRemainingAsync().Result.Single();
+            Context.DeleteAsync<TimelineEventLinkModel>(model);
+        }
+        
         public IEnumerable<TimelineTimelineEventLinkModel> GetLinkedEvents(string timelineId, string skip = "0")
         {
-            var pageToken = CreatePaginationToken(skip);
+            var pageToken = skip != "0" ? CreatePaginationToken(skip) : "{}";
             
-            var timelineEventLinkTable = Context.GetTargetTable<TimelineEventLinkModel>();
+            var timelineEventLinkTable = Context.GetTargetTable<TimelineTimelineEventLinkModel>();
             var filter = CreateBaseQueryFilter();
             filter.AddCondition(nameof(TimelineTimelineEventLinkModel.TimelineId), QueryOperator.Equal, timelineId);
             
@@ -43,14 +55,18 @@ namespace TimelineLite
         
         public TimelineModel GetModel(string id)
         {
+            var table = Context.GetTargetTable<TimelineModel>();
+            var filter = CreateBaseQueryFilter();
+            filter.AddCondition(nameof(TimelineModel.Id), QueryOperator.Equal, id);
             var conditions = new List<ScanCondition>
             {
                 new ScanCondition(nameof(TimelineModel.Id), ScanOperator.Equal, id),
                 new ScanCondition(nameof(TimelineModel.TenantId), ScanOperator.Equal, TenantId),
                 new ScanCondition(nameof(TimelineModel.IsDeleted), ScanOperator.Equal, false)
             };
-            
-            return Context.ScanAsync<TimelineModel>(conditions).GetRemainingAsync().Result.Single();
+            var config = CreateQueryConfiguration(filter);
+            var search = table.Query(config);
+            return Context.FromDocuments<TimelineModel>(search.GetRemainingAsync().Result).Single();
         }
 
         public void SaveModel(TimelineModel model)
