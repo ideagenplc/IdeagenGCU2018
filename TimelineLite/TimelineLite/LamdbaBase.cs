@@ -1,6 +1,8 @@
 using System;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Runtime.SharedInterfaces;
+using Amazon.SimpleDB;
 using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
 using TimelineLite.Core;
@@ -12,6 +14,8 @@ namespace TimelineLite
         protected static APIGatewayProxyResponse Handle(Func<APIGatewayProxyResponse> handler)
         {
             AWSSDKHandler.RegisterXRay<IAmazonDynamoDB>();
+            AWSSDKHandler.RegisterXRay<IAmazonSimpleDB>();
+            AWSSDKHandler.RegisterXRay<ICoreAmazonS3>();
             try
             {
                 return AWSXRayRecorder.Instance.TraceMethod("Handling", handler.Invoke);

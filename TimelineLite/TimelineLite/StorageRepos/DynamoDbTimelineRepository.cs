@@ -28,14 +28,16 @@ namespace TimelineLite
         
         public void DeleteLink(string timelineId, string eventId)
         {
-            var conditions = new List<ScanCondition>
-            {
-                new ScanCondition(nameof(TimelineTimelineEventLinkModel.TenantId), ScanOperator.Equal, TenantId),
-                new ScanCondition(nameof(TimelineTimelineEventLinkModel.TimelineEventId), ScanOperator.Equal, eventId),
-                new ScanCondition(nameof(TimelineTimelineEventLinkModel.TimelineId), ScanOperator.Equal, timelineId)
-            };
-            var model = Context.ScanAsync<TimelineEventLinkModel>(conditions).GetRemainingAsync().Result.Single();
-            Context.DeleteAsync<TimelineEventLinkModel>(model);
+            var table = Context.GetTargetTable<TimelineTimelineEventLinkModel>();
+            var filter = CreateBaseQueryFilter();
+            filter.AddCondition(nameof(TimelineTimelineEventLinkModel.TimelineId), QueryOperator.Equal, timelineId);
+            filter.AddCondition(nameof(TimelineTimelineEventLinkModel.TimelineEventId), ScanOperator.Equal, eventId);
+            
+            var config = CreateQueryConfiguration(filter);
+            var search = table.Query(config);
+            var model = Context.FromDocuments<TimelineTimelineEventLinkModel>(search.GetRemainingAsync().Result).Single();
+            
+            Context.DeleteAsync<TimelineTimelineEventLinkModel>(model).Wait();
         }
         
         public IEnumerable<TimelineTimelineEventLinkModel> GetLinkedEvents(string timelineId, string skip = "0")
