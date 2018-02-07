@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using Amazon;
 using Amazon.DynamoDBv2;
@@ -65,7 +66,8 @@ namespace TimelineLite
             {
                 BucketName = "stewartw-test-bucket",
                 Verb = HttpVerb.PUT,
-                Key = $"{tenantId}/{attachmentId}"
+                Key = $"{tenantId}/{attachmentId}",
+                Expires = DateTime.Now.AddMinutes(15)
             });
             return WrapResponse(presignedUrl);
         }
