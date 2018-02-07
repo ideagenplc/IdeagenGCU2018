@@ -183,8 +183,8 @@ namespace TimelineLite
             var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1),
                 tenantId);
             var model = repo.GetModel(timelineId);
-           // return WrapResponse(JsonConvert.SerializeObject(model));
-            return WrapResponse("OK");
+           return WrapResponse(JsonConvert.SerializeObject(model));
+           // return WrapResponse("OK");
         }
 
         #endregion
