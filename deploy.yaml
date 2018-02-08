@@ -243,6 +243,8 @@ Resources:
                AmazonDynamoDBFullAccess
              -
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               arn:aws:iam::aws:policy/AmazonS3FullAccess
            Timeout: 15
            Events:
              GetResource:
