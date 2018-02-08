@@ -18,7 +18,7 @@ namespace TimelineLite
             AWSSDKHandler.RegisterXRay<ICoreAmazonS3>();
             try
             {
-                return AWSXRayRecorder.Instance.TraceMethod("Handling Request", handler.Invoke);
+                return AWSXRayRecorder.Instance.TraceMethod("Handling Request", handler);
             }
             catch (GCUException e)
             {
