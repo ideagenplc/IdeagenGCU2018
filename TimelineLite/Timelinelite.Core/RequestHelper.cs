@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices.ComTypes;
@@ -59,6 +60,12 @@ namespace TimelineLite.Requests
             if (authToken == recievedAuthToken)
                 return tenant;
             throw new AuthenticationException($"Invalid Authorisation Token: {recievedAuthToken}");
+        }
+
+        public static void ValidateString(this string input, string message)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                throw new ValidationException(message);
         }
 
         private static string GetAuthToken(string tenantId)
