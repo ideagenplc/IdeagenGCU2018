@@ -1,6 +1,6 @@
 ﻿using TimelineLite.Requests;
 
-namespace TimelineLite.TimelineEventAttchment
+namespace TimelineLite.TimelineEventAttachment
 {
     public class DeleteTimelineEventAttachmentRequest : BaseRequest
     {

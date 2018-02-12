@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using TimelineLite.Requests;
 using TimelineLite.Responses;
 
-namespace TimelineLite.TimelineEventAttchment
+namespace TimelineLite.TimelineEventAttachment
 {
     public class TimelineEventAttachment : LambdaBase
     {

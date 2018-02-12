@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using TimelineLite.Core;
 using TimelineLite.StorageRepos;
 
-namespace TimelineLite.TimelineEventAttchment
+namespace TimelineLite.TimelineEventAttachment
 {
     public class DynamoDbTimelineEventAttachmentRepository : BaseRepository
     {

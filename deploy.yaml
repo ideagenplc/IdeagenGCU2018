@@ -326,7 +326,7 @@ Resources:
         Properties:
            Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::LinkEvents
            Runtime: dotnetcore2.0
-           CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.TimelineEvent.zip
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
            Policies:
              -
                AmazonDynamoDBFullAccess
@@ -349,7 +349,7 @@ Resources:
         Properties:
            Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::UnlinkEvents
            Runtime: dotnetcore2.0
-           CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.TimelineEvent.zip
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
            Policies:
              -
                AmazonDynamoDBFullAccess
@@ -372,7 +372,7 @@ Resources:
         Properties:
            Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::GetLinkedTimelineEvents
            Runtime: dotnetcore2.0
-           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
            Policies:
              -
                AmazonDynamoDBFullAccess
@@ -389,37 +389,13 @@ Resources:
                Properties:
                  Path: /TimelineEvent/GetLinkedTimelineEvents
                  Method: get
-
-    GetTimelineEventAttachmentsFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-           Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::GetAttachments
-           Runtime: dotnetcore2.0
-           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
-           Policies:
-             -
-               AmazonDynamoDBFullAccess
-             -
-               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-             -
-               AWSXrayFullAccess
-           Timeout: 30
-           Tracing: Active
-           MemorySize: 3008
-           Events:
-             GetResource:
-               Type: Api
-               Properties:
-                 Path: /TimelineEvent/GetTimelineEventAttachments
-                 Method: get
-
-                 
+  
     CreateAttachmentFunction:
         Type: AWS::Serverless::Function
         Properties:
            Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::Create
            Runtime: dotnetcore2.0
-           CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.TimelineEventAttachment.zip
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
            Policies:
              -
                AmazonDynamoDBFullAccess
@@ -442,7 +418,7 @@ Resources:
         Properties:
            Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::EditTitle
            Runtime: dotnetcore2.0
-           CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.TimelineEventAttachment.zip
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
            Policies:
              -
                AmazonDynamoDBFullAccess
@@ -465,7 +441,7 @@ Resources:
         Properties:
            Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::Delete
            Runtime: dotnetcore2.0
-           CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.TimelineEventAttachment.zip
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
            Policies:
              -
                AmazonDynamoDBFullAccess
@@ -488,7 +464,7 @@ Resources:
         Properties:
            Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::GenerateUploadPresignedUrl
            Runtime: dotnetcore2.0
-           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
            Policies:
              -
                AmazonDynamoDBFullAccess
@@ -509,7 +485,7 @@ Resources:
         Properties:
            Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::GenerateGetPresignedUrl
            Runtime: dotnetcore2.0
-           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
            Policies:
              -
                AmazonDynamoDBFullAccess
