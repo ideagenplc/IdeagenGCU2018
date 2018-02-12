@@ -58,7 +58,7 @@ namespace TimelineLite
         
         public APIGatewayProxyResponse GetAttachments(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return Handle(() => GetLinkedTimelineEvents(request));
+            return Handle(() => GetTimelineEventAttachments(request));
         }
 
         private static APIGatewayProxyResponse CreateTimelineEvent(APIGatewayProxyRequest request)

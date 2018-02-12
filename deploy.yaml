@@ -14,8 +14,8 @@ Resources:
            AWSXrayFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-       Timeout: 15
-       MemorySize: 1024
+       Timeout: 30
+       MemorySize: 3072
        Tracing: Active
        Events:
          GetResource:
@@ -36,14 +36,14 @@ Resources:
            AWSXrayFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-       Timeout: 15
-       MemorySize: 1024
+       Timeout: 30
+       MemorySize: 3072
        Tracing: Active
        Events:
          GetResource:
            Type: Api
            Properties:
-             Path: /Timeline/Edit
+             Path: /Timeline/EditTitle
              Method: put
 
   DeleteTimelineFunction:
@@ -57,8 +57,8 @@ Resources:
            AmazonDynamoDBFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-       Timeout: 15
-       MemorySize: 1024
+       Timeout: 30
+       MemorySize: 3072
        Tracing: Active
        Events:
          GetResource:
@@ -80,8 +80,8 @@ Resources:
            AWSXrayFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-       Timeout: 15
-       MemorySize: 1024
+       Timeout: 30
+       MemorySize: 3072
        Tracing: Active
        Events:
          GetResource:
@@ -103,8 +103,8 @@ Resources:
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
          -
            AWSXrayFullAccess
-       Timeout: 15
-       MemorySize: 1024
+       Timeout: 30
+       MemorySize: 3072
        Tracing: Active
        Events:
          GetResource:
@@ -126,9 +126,9 @@ Resources:
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
          -
            AWSXrayFullAccess
-       Timeout: 15
+       Timeout: 30
        Tracing: Active
-       MemorySize: 1024
+       MemorySize: 3072
        Events:
          GetResource:
            Type: Api
@@ -151,8 +151,8 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
-           Timeout: 15
-           MemorySize: 1024
+           Timeout: 30
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -174,14 +174,106 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
-           Timeout: 15
-           MemorySize: 1024
+           Timeout: 30
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
                Type: Api
                Properties:
                  Path: /TimelineEvent/Create
+                 Method: put
+
+    EditTimelineEventTitleFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::EditTitle
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
+           Timeout: 30
+           MemorySize: 3072
+           Tracing: Active
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEvent/EditTitle
+                 Method: put
+                 
+    EditTimelineEventDescriptionFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::EditDescription
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
+           Timeout: 30
+           MemorySize: 3072
+           Tracing: Active
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEvent/EditDescription
+                 Method: put
+
+    DeleteTimelineEventFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::Delete
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
+           Timeout: 30
+           MemorySize: 3072
+           Tracing: Active
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEvent/Delete
+                 Method: put            
+                 
+    EditTimelineEventEventDateTimeFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::EditEventDateTime
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
+           Timeout: 30
+           MemorySize: 3072
+           Tracing: Active
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEvent/EditEventDateTime
                  Method: put
 
     LinkTimelineEventsFunction:
@@ -197,8 +289,8 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
-           Timeout: 15
-           MemorySize: 1024
+           Timeout: 30
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -207,6 +299,29 @@ Resources:
                  Path: /TimelineEvent/LinkEvents
                  Method: put
 
+    UnLinkTimelineEventsFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::UnlinkEvents
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.TimelineEvent.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
+           Timeout: 30
+           MemorySize: 3072
+           Tracing: Active
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEvent/UnlinkEvents
+                 Method: put
+                 
     GetLinkedTimelineEventsFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -220,9 +335,9 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
-           Timeout: 15
+           Timeout: 30
            Tracing: Active
-           MemorySize: 1024
+           MemorySize: 3072
            Events:
              GetResource:
                Type: Api
@@ -230,12 +345,103 @@ Resources:
                  Path: /TimelineEvent/GetLinkedTimelineEvents
                  Method: get
 
-
-
-    GenerateAttachmentPresignedUrl:
+    GetTimelineEventAttachmentsFunction:
         Type: AWS::Serverless::Function
         Properties:
-           Handler: TimelineLite::TimelineLite.TimelineEventAttachment::GeneratePresignedUrl
+           Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::GetAttachments
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
+           Timeout: 30
+           Tracing: Active
+           MemorySize: 3072
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEvent/GetTimelineEventAttachments
+                 Method: get
+
+                 
+    CreateAttachmentFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::Create
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.TimelineEventAttachment.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
+           Timeout: 30
+           MemorySize: 3072
+           Tracing: Active
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEventAttachment/Create
+                 Method: put
+                 
+    EditTitleAttachmentFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::EditTitle
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.TimelineEventAttachment.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
+           Timeout: 30
+           MemorySize: 3072
+           Tracing: Active
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEventAttachment/EditTitle
+                 Method: put
+                 
+    DeleteAttachmentFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::Delete
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.TimelineEventAttachment.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               AWSXrayFullAccess
+           Timeout: 30
+           MemorySize: 3072
+           Tracing: Active
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEventAttachment/Delete
+                 Method: put
+
+    GenerateUploadPresignedUrl:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::GenerateUploadPresignedUrl
            Runtime: dotnetcore2.0
            CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
            Policies:
@@ -245,12 +451,33 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                arn:aws:iam::aws:policy/AmazonS3FullAccess
-           Timeout: 15
+           Timeout: 30
            Events:
              GetResource:
                Type: Api
                Properties:
-                 Path: /TimelineEventAttachment/GenerateAttachmentPresignedUrl
+                 Path: /TimelineEventAttachment/GenerateUploadPresignedUrl
+                 Method: get
+                 
+    GenerateGetPresignedUrl:
+        Type: AWS::Serverless::Function
+        Properties:
+           Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::GenerateGetPresignedUrl
+           Runtime: dotnetcore2.0
+           CodeUri: s3://stewartw-test-bucket/TimelineLite.zip
+           Policies:
+             -
+               AmazonDynamoDBFullAccess
+             -
+               arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+             -
+               arn:aws:iam::aws:policy/AmazonS3FullAccess
+           Timeout: 30
+           Events:
+             GetResource:
+               Type: Api
+               Properties:
+                 Path: /TimelineEventAttachment/GenerateGetPresignedUrl
                  Method: get
 
     TimelineStorage:

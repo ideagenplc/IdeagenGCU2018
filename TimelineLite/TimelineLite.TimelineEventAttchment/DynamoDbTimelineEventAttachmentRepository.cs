@@ -3,9 +3,8 @@ using System.Linq;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
-using TimelineLite.StorageModels;
 
-namespace TimelineLite.StorageRepos
+namespace TimelineLite.TimelineEventAttchment
 {
     public class DynamoDbTimelineEventAttachmentRepository
     {

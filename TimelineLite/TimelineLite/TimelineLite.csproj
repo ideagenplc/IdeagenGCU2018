@@ -18,6 +18,8 @@
   <ItemGroup>
     <Folder Include="Core" />
     <Folder Include="Responses" />
+    <Folder Include="StorageModels\" />
+    <Folder Include="StorageRepos\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Timelinelite.Core\Timelinelite.Core.csproj" />

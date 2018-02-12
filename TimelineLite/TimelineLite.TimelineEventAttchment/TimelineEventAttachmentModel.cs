@@ -1,6 +1,7 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using TimelineLite.StorageModels;
 
-namespace TimelineLite.StorageModels
+namespace TimelineLite.TimelineEventAttchment
 {
     [DynamoDBTable("TimelineEventAttachmentStore")]
     public class TimelineEventAttachmentModel : BaseModel

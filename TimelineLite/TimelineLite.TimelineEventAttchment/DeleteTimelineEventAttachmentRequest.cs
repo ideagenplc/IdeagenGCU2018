@@ -1,4 +1,6 @@
-﻿namespace TimelineLite.Requests.TimelineEventAttachments
+﻿using TimelineLite.Requests;
+
+namespace TimelineLite.TimelineEventAttchment
 {
     public class DeleteTimelineEventAttachmentRequest : BaseRequest
     {

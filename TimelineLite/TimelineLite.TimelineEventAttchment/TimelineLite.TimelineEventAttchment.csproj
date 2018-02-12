@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.3.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Timelinelite.Core\Timelinelite.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Amazon.Lambda.APIGatewayEvents">
+      <HintPath>..\..\..\..\Users\ross.anderson\.nuget\packages\amazon.lambda.apigatewayevents\1.1.2\lib\netstandard1.3\Amazon.Lambda.APIGatewayEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="Amazon.Lambda.Core">
+      <HintPath>..\..\..\..\Users\ross.anderson\.nuget\packages\amazon.lambda.core\1.0.0\lib\netstandard1.3\Amazon.Lambda.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
