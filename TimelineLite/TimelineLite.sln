@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timelinelite.Core", "Timeli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimelineLite.TimelineEvent", "TimelineLite.TimelineEvent\TimelineLite.TimelineEvent.csproj", "{91DF3602-ADBB-4952-AB10-E624072C5D0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimelineLite.TimelineEventAttchment", "TimelineLite.TimelineEventAttchment\TimelineLite.TimelineEventAttchment.csproj", "{E5FF1FFC-A2CA-47F3-88CE-A3E05A2BDB7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimelineLite.TimelineEventAttachment", "TimelineLite.TimelineEventAttchment\TimelineLite.TimelineEventAttachment.csproj", "{E5FF1FFC-A2CA-47F3-88CE-A3E05A2BDB7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
