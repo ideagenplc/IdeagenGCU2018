@@ -14,8 +14,8 @@ Resources:
            AWSXrayFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-       Timeout: 30
-       MemorySize: 3072
+       Timeout: 15
+       MemorySize: 3008
        Tracing: Active
        Events:
          GetResource:
@@ -23,6 +23,7 @@ Resources:
            Properties:
              Path: /Timeline/Create
              Method: put
+
   EditTimelineTitleFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -36,8 +37,8 @@ Resources:
            AWSXrayFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-       Timeout: 30
-       MemorySize: 3072
+       Timeout: 15
+       MemorySize: 3008
        Tracing: Active
        Events:
          GetResource:
@@ -57,8 +58,8 @@ Resources:
            AmazonDynamoDBFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-       Timeout: 30
-       MemorySize: 3072
+       Timeout: 15
+       MemorySize: 3008
        Tracing: Active
        Events:
          GetResource:
@@ -80,8 +81,8 @@ Resources:
            AWSXrayFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-       Timeout: 30
-       MemorySize: 3072
+       Timeout: 15
+       MemorySize: 3008
        Tracing: Active
        Events:
          GetResource:
@@ -103,8 +104,8 @@ Resources:
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
          -
            AWSXrayFullAccess
-       Timeout: 30
-       MemorySize: 3072
+       Timeout: 15
+       MemorySize: 3008
        Tracing: Active
        Events:
          GetResource:
@@ -128,7 +129,7 @@ Resources:
            AWSXrayFullAccess
        Timeout: 30
        Tracing: Active
-       MemorySize: 3072
+       MemorySize: 3008
        Events:
          GetResource:
            Type: Api
@@ -136,7 +137,51 @@ Resources:
              Path: /Timeline/GetTimeline
              Method: get
 
+  UnlinkEventFromTimelineFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline::UnlinkEvent
+       Runtime: dotnetcore2.0
+       CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
+       Policies:
+         -
+           AmazonDynamoDBFullAccess
+         -
+           arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+         -
+           AWSXrayFullAccess
+       Timeout: 15
+       MemorySize: 3008
+       Tracing: Active
+       Events:
+         GetResource:
+           Type: Api
+           Properties:
+             Path: /Timeline/UnlinkEvent
+             Method: put
 
+  GetAllTimelinesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline::GetAll
+       Runtime: dotnetcore2.0
+       CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
+       Policies:
+         -
+           AmazonDynamoDBFullAccess
+         -
+           arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+         -
+           AWSXrayFullAccess
+       Timeout: 15
+       Tracing: Active
+       MemorySize: 3008
+       Events:
+         GetResource:
+           Type: Api
+           Properties:
+             Path: /Timeline/GetTimelines
+             Method: get
 
     GetLinkedEvents:
         Type: AWS::Serverless::Function
@@ -151,8 +196,8 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
-           Timeout: 30
-           MemorySize: 3072
+           Timeout: 15
+           MemorySize: 3008
            Tracing: Active
            Events:
              GetResource:
@@ -174,8 +219,8 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
-           Timeout: 30
-           MemorySize: 3072
+           Timeout: 15
+           MemorySize: 3008
            Tracing: Active
            Events:
              GetResource:
@@ -289,8 +334,8 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
-           Timeout: 30
-           MemorySize: 3072
+           Timeout: 15
+           MemorySize: 3008
            Tracing: Active
            Events:
              GetResource:
@@ -337,7 +382,7 @@ Resources:
                AWSXrayFullAccess
            Timeout: 30
            Tracing: Active
-           MemorySize: 3072
+           MemorySize: 3008
            Events:
              GetResource:
                Type: Api

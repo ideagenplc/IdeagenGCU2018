@@ -1,4 +1,5 @@
 using System;
+using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Runtime.SharedInterfaces;
@@ -6,6 +7,7 @@ using Amazon.SimpleDB;
 using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
 using TimelineLite.Core;
+using TimelineLite.Requests;
 using static TimelineLite.Responses.ResponseHelper;
 namespace TimelineLite
 {
@@ -34,5 +36,7 @@ namespace TimelineLite
         {
             Console.WriteLine(message);
         }
+        
+        
     }
 }
