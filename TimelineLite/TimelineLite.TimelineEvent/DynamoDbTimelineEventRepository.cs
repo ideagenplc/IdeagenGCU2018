@@ -4,6 +4,7 @@ using System.Linq;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
+using TimelineLite.Core;
 using TimelineLite.StorageModels;
 
 namespace TimelineLite.StorageRepos
@@ -24,14 +25,15 @@ namespace TimelineLite.StorageRepos
         
         public TimelineEventModel GetTimelineEventModel(string id)
         {
-            var conditions = new List<ScanCondition>
-            {
-                new ScanCondition(nameof(TimelineEventModel.Id), ScanOperator.Equal, id),
-                new ScanCondition(nameof(TimelineEventModel.TenantId), ScanOperator.Equal, TenantId),
-                new ScanCondition(nameof(TimelineEventModel.IsDeleted), ScanOperator.Equal, false)
-            };
-            
-            return Context.ScanAsync<TimelineEventModel>(conditions).GetRemainingAsync().Result.Single();
+            var table = Context.GetTargetTable<TimelineEventModel>();
+            var filter = CreateBaseQueryFilter();
+            filter.AddCondition(nameof(TimelineEventModel.Id), QueryOperator.Equal, id);
+            var config = CreateQueryConfiguration(filter);
+            var search = table.Query(config);
+            var model = Context.FromDocuments<TimelineEventModel>(search.GetRemainingAsync().Result).SingleOrDefault();
+            if (model == null)
+                throw new ValidationException($"No Timeline Event found with Id : {id}");
+            return model;
         }
 
         public void SaveTimelineEventModel(TimelineEventModel model)
@@ -45,33 +47,33 @@ namespace TimelineLite.StorageRepos
             model.TenantId = TenantId;
             Context.SaveAsync(model).Wait();
         }
-        
-        public TimelineEventLinkModel GetTimelineEventLinkModel(string id, string linkedToTimelineEventId)
+
+        public void DeleteLink(string timelineId, string linkedToTimelineEventId)
         {
-            var conditions = new List<ScanCondition>
-            {
-                new ScanCondition(nameof(TimelineEventLinkModel.TimelineEventId), ScanOperator.Equal, id),
-                new ScanCondition(nameof(TimelineEventLinkModel.LinkedToTimelineEventId), ScanOperator.Equal, linkedToTimelineEventId),
-                new ScanCondition(nameof(TimelineEventLinkModel.TenantId), ScanOperator.Equal, TenantId),
-                new ScanCondition(nameof(TimelineEventLinkModel.IsDeleted), ScanOperator.Equal, false)
-            };
-            
-            return Context.ScanAsync<TimelineEventLinkModel>(conditions).GetRemainingAsync().Result.Single();
+            var table = Context.GetTargetTable<TimelineEventLinkModel>();
+            var filter = CreateBaseQueryFilter();
+            filter.AddCondition(nameof(TimelineEventLinkModel.TimelineEventId), QueryOperator.Equal, timelineId);
+            filter.AddCondition(nameof(TimelineEventLinkModel.LinkedToTimelineEventId), ScanOperator.Equal, linkedToTimelineEventId);
+
+            var config = CreateQueryConfiguration(filter);
+            var search = table.Query(config);
+            var model = Context.FromDocuments<TimelineEventLinkModel>(search.GetRemainingAsync().Result)
+                .SingleOrDefault();
+            if (model == null)
+                throw new ValidationException($"There's no link between {timelineId} and {linkedToTimelineEventId}");
+            Context.DeleteAsync<TimelineEventLinkModel>(model).Wait();
         }
-        
-        public IEnumerable<TimelineEventLinkModel> GetTimelineEventLinks(string timelineEventId, int skip)
+
+        public IEnumerable<TimelineEventLinkModel> GetTimelineEventLinks(string timelineEventId)
         {
-            var pageToken = CreatePaginationToken(skip);
-            
             var timelineEventLinkTable = Context.GetTargetTable<TimelineEventLinkModel>();
             var filter = CreateBaseQueryFilter();
             filter.AddCondition(nameof(TimelineEventLinkModel.TimelineEventId), QueryOperator.Equal, timelineEventId);
-            
-            var config = CreateQueryConfiguration(filter, pageToken: pageToken);
+
+            var config = CreateQueryConfiguration(filter);
             var search = timelineEventLinkTable.Query(config);
-            var timelineEventLinkedModels = Context.FromDocuments<TimelineEventLinkModel>(search.GetNextSetAsync().Result);
-            pageToken = search.PaginationToken;
-           
+            var timelineEventLinkedModels =
+                Context.FromDocuments<TimelineEventLinkModel>(search.GetNextSetAsync().Result);
             return timelineEventLinkedModels;
         }
 

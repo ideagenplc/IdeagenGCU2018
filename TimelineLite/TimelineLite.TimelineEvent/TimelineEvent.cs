@@ -55,7 +55,12 @@ namespace TimelineLite
         {
             return Handle(() => GetLinkedTimelineEvents(request));
         }
-        
+
+        public APIGatewayProxyResponse LinkAttachment(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => LinkTimelineEvents(request));
+        }
+
         public APIGatewayProxyResponse GetAttachments(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => GetTimelineEventAttachments(request));
@@ -171,12 +176,7 @@ namespace TimelineLite
                 throw new ValidationException("Invalid Unlinked from Timeline Event Id");
 
             var repo = GetRepo(timelineEventRequest.TenantId);
-            var eventModel = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
-            var unlinkedFromEventModel = repo.GetTimelineEventModel(timelineEventRequest.UnlinkedFromTimelineEventId);
-
-            var timelineEventLinkedModel = repo.GetTimelineEventLinkModel(eventModel.Id, unlinkedFromEventModel.Id);
-            timelineEventLinkedModel.IsDeleted = true;
-            repo.SaveTimelineEventLinkedModel(timelineEventLinkedModel);
+            repo.DeleteLink(timelineEventRequest.TimelineEventId, timelineEventRequest.UnlinkedFromTimelineEventId);
 
             return WrapResponse(
                 $"Successfully unlinked Timeline Event: {timelineEventRequest.TimelineEventId} from Timeline Event: {timelineEventRequest.UnlinkedFromTimelineEventId}");
@@ -188,11 +188,10 @@ namespace TimelineLite
             var timelineEventId = request.Headers["TimelineEventId"];
             var skip = request.Headers["Skip"];
             ValidateTimelineEventId(timelineEventId);
-            ValidateTimelineEventSkip(skip);
 
             var repo = GetRepo(tenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventId);
-            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id, int.Parse(skip));
+            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id);
             
             Log($"Skipping: {skip}");
             Log("Returning linked timeline events");
@@ -203,21 +202,39 @@ namespace TimelineLite
 
             return WrapResponse($"{JsonConvert.SerializeObject(timelineEventLinkedModels)}");
         }
-        
-        
+
+        private static APIGatewayProxyResponse LinkTimelineEventAttachment(APIGatewayProxyRequest request)
+        {
+            var timelineEventRequest = ParsePutRequestBody<LinkTimelineEventToTimelineEventRequest>(request);
+
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
+            if (string.IsNullOrWhiteSpace(timelineEventRequest.LinkedToTimelineEventId))
+                throw new ValidationException("Invalid Linked to Timeline Event Id");
+
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
+            var linkedTomodel = repo.GetTimelineEventModel(timelineEventRequest.LinkedToTimelineEventId);
+            var timelineEventLinkedModel = new TimelineEventLinkModel
+            {
+                Id = Guid.NewGuid().ToString(),
+                TimelineEventId = model.Id,
+                LinkedToTimelineEventId = linkedTomodel.Id
+            };
+            repo.SaveTimelineEventLinkedModel(timelineEventLinkedModel);
+
+            return WrapResponse($"{JsonConvert.SerializeObject(timelineEventLinkedModel)}");
+        }
+
         private static APIGatewayProxyResponse GetTimelineEventAttachments(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
             var timelineEventId = request.Headers["TimelineEventId"];
-            var skip = request.Headers["Skip"];
             ValidateTimelineEventId(timelineEventId);
-            ValidateTimelineEventSkip(skip);
 
             var repo = GetRepo(tenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventId);
-            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id, int.Parse(skip));
+            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id);
             
-            Log($"Skipping: {skip}");
             Log("Returning linked timeline events");
             foreach (var linkedModel in timelineEventLinkedModels)
             {
@@ -248,12 +265,6 @@ namespace TimelineLite
         {
             if (string.IsNullOrWhiteSpace(dateTime))
                 throw new ValidationException("Invalid Timeline Event DateTime");
-        }
-        
-        private static void ValidateTimelineEventSkip(string skip)
-        {
-            if (string.IsNullOrWhiteSpace(skip))
-                throw new ValidationException("Invalid skip");
         }
     }
 }

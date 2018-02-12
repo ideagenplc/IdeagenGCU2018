@@ -14,8 +14,13 @@ Resources:
            AWSXrayFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+<<<<<<< HEAD
+       Timeout: 30
+       MemorySize: 3072
+=======
        Timeout: 15
        MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
        Tracing: Active
        Events:
          GetResource:
@@ -37,8 +42,13 @@ Resources:
            AWSXrayFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+<<<<<<< HEAD
+       Timeout: 30
+       MemorySize: 3072
+=======
        Timeout: 15
        MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
        Tracing: Active
        Events:
          GetResource:
@@ -58,8 +68,13 @@ Resources:
            AmazonDynamoDBFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+<<<<<<< HEAD
+       Timeout: 30
+       MemorySize: 3072
+=======
        Timeout: 15
        MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
        Tracing: Active
        Events:
          GetResource:
@@ -81,8 +96,13 @@ Resources:
            AWSXrayFullAccess
          -
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+<<<<<<< HEAD
+       Timeout: 30
+       MemorySize: 3072
+=======
        Timeout: 15
        MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
        Tracing: Active
        Events:
          GetResource:
@@ -104,8 +124,13 @@ Resources:
            arn:aws:iam::346310877561:policy/SimpleDbFullAccess
          -
            AWSXrayFullAccess
+<<<<<<< HEAD
+       Timeout: 30
+       MemorySize: 3072
+=======
        Timeout: 15
        MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
        Tracing: Active
        Events:
          GetResource:
@@ -129,7 +154,11 @@ Resources:
            AWSXrayFullAccess
        Timeout: 30
        Tracing: Active
+<<<<<<< HEAD
+       MemorySize: 3072
+=======
        MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
        Events:
          GetResource:
            Type: Api
@@ -196,8 +225,13 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
+<<<<<<< HEAD
+           Timeout: 30
+           MemorySize: 3072
+=======
            Timeout: 15
            MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
            Tracing: Active
            Events:
              GetResource:
@@ -219,8 +253,13 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
+<<<<<<< HEAD
+           Timeout: 30
+           MemorySize: 3072
+=======
            Timeout: 15
            MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
            Tracing: Active
            Events:
              GetResource:
@@ -243,7 +282,7 @@ Resources:
              -
                AWSXrayFullAccess
            Timeout: 30
-           MemorySize: 3008
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -266,7 +305,7 @@ Resources:
              -
                AWSXrayFullAccess
            Timeout: 30
-           MemorySize: 3008
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -289,7 +328,7 @@ Resources:
              -
                AWSXrayFullAccess
            Timeout: 30
-           MemorySize: 3008
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -312,7 +351,7 @@ Resources:
              -
                AWSXrayFullAccess
            Timeout: 30
-           MemorySize: 3008
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -334,8 +373,13 @@ Resources:
                arn:aws:iam::346310877561:policy/SimpleDbFullAccess
              -
                AWSXrayFullAccess
+<<<<<<< HEAD
+           Timeout: 30
+           MemorySize: 3072
+=======
            Timeout: 15
            MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
            Tracing: Active
            Events:
              GetResource:
@@ -358,7 +402,7 @@ Resources:
              -
                AWSXrayFullAccess
            Timeout: 30
-           MemorySize: 3008
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -382,7 +426,11 @@ Resources:
                AWSXrayFullAccess
            Timeout: 30
            Tracing: Active
+<<<<<<< HEAD
+           MemorySize: 3072
+=======
            MemorySize: 3008
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
            Events:
              GetResource:
                Type: Api
@@ -390,6 +438,7 @@ Resources:
                  Path: /TimelineEvent/GetLinkedTimelineEvents
                  Method: get
 
+<<<<<<< HEAD
     GetTimelineEventAttachmentsFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -405,7 +454,7 @@ Resources:
                AWSXrayFullAccess
            Timeout: 30
            Tracing: Active
-           MemorySize: 3008
+           MemorySize: 3072
            Events:
              GetResource:
                Type: Api
@@ -428,7 +477,7 @@ Resources:
              -
                AWSXrayFullAccess
            Timeout: 30
-           MemorySize: 3008
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -451,7 +500,7 @@ Resources:
              -
                AWSXrayFullAccess
            Timeout: 30
-           MemorySize: 3008
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -474,7 +523,7 @@ Resources:
              -
                AWSXrayFullAccess
            Timeout: 30
-           MemorySize: 3008
+           MemorySize: 3072
            Tracing: Active
            Events:
              GetResource:
@@ -505,6 +554,9 @@ Resources:
                  Method: get
                  
     GenerateGetPresignedUrl:
+=======
+    GenerateAttachmentPresignedUrl:
+>>>>>>> 3c3a272be7a8406ac2490c4153d569456e3c35a2
         Type: AWS::Serverless::Function
         Properties:
            Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::GenerateGetPresignedUrl
@@ -524,25 +576,3 @@ Resources:
                Properties:
                  Path: /TimelineEventAttachment/GenerateGetPresignedUrl
                  Method: get
-
-    TimelineStorage:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        AttributeDefinitions:
-            -
-              AttributeName: Id
-              AttributeType: S
-            -
-              AttributeName: TenantId
-              AttributeType: S
-        KeySchema:
-            -
-              AttributeName: TenantId
-              KeyType: HASH
-            -
-              AttributeName: Id
-              KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
-        TableName: "TimelineStore"

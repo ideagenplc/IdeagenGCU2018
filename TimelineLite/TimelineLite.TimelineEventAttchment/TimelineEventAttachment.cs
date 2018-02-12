@@ -113,10 +113,7 @@ namespace TimelineLite.TimelineEventAttchment
             
             var repo = GetRepo(timelineEventAttachmentRequest.TenantId);
             var model = repo.GetModel(timelineEventAttachmentRequest.AttachmentId);
-            if(model.IsDeleted)
-                return ResponseHelper.WrapResponse($"Cannot find attachment with Id {timelineEventAttachmentRequest.AttachmentId}", 404);
-            model.IsDeleted = true;
-            repo.SaveModel(model);
+            repo.DeleteModel(model);
             return ResponseHelper.WrapResponse($"Successfully deleted Timeline event attachment: {timelineEventAttachmentRequest.AttachmentId}");
         }
 
@@ -128,13 +125,13 @@ namespace TimelineLite.TimelineEventAttchment
         private static void ValidateTimelineEventAttachmentId(string timelineEventAttachmentId)
         {
             if (string.IsNullOrWhiteSpace(timelineEventAttachmentId))
-                throw new ValidationException("Invalid Timeline Id");
+                throw new ValidationException("Invalid Timeline Attachment Id");
         }
         
         private static void ValidateTimelineEventId(string timelineEventId)
         {
             if (string.IsNullOrWhiteSpace(timelineEventId))
-                throw new ValidationException("Invalid Timeline Id");
+                throw new ValidationException("Invalid Timeline Event Id");
         }
         
         private static void ValidateTimelineEventAttachentTitle(string title)
