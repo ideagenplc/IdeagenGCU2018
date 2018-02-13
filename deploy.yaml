@@ -4,7 +4,7 @@ Resources:
   CreateTimelineFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.Timeline::TimelineLite.Timeline::Create
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::Create
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
        Policies:
@@ -27,7 +27,7 @@ Resources:
   EditTimelineTitleFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.Timeline::TimelineLite.Timeline::EditTitle
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::EditTitle
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
        Policies:
@@ -50,7 +50,7 @@ Resources:
   DeleteTimelineFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.Timeline::TimelineLite.Timeline::Delete
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::Delete
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
        Policies:
@@ -71,7 +71,7 @@ Resources:
   LinkEventToTimelineFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.Timeline::TimelineLite.Timeline::LinkEvent
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::LinkEvent
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
        Policies:
@@ -94,7 +94,7 @@ Resources:
   UnlinkEventFromTimelineFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.Timeline::TimelineLite.Timeline::UnlinkEvent
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::UnlinkEvent
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
        Policies:
@@ -117,7 +117,7 @@ Resources:
   GetTimelineFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.Timeline::TimelineLite.Timeline::Get
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::Get
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
        Policies:
@@ -140,7 +140,7 @@ Resources:
   UnlinkEventFromTimelineFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.Timeline::TimelineLite.Timeline::UnlinkEvent
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::UnlinkEvent
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
        Policies:
@@ -163,7 +163,7 @@ Resources:
   GetAllTimelinesFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.Timeline::TimelineLite.Timeline::GetAll
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::GetAll
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
        Policies:
@@ -186,7 +186,7 @@ Resources:
   GetLinkedEvents:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::GetEvents
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::GetEvents
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -209,7 +209,7 @@ Resources:
   CreateTimelineEventFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::Create
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::Create
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -232,7 +232,7 @@ Resources:
   EditTimelineEventTitleFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::EditTitle
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::EditTitle
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -255,7 +255,7 @@ Resources:
   EditTimelineEventDescriptionFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::EditDescription
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::EditDescription
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -278,7 +278,7 @@ Resources:
   DeleteTimelineEventFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::Delete
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::Delete
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -301,7 +301,7 @@ Resources:
   EditTimelineEventEventDateTimeFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::EditEventDateTime
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::EditEventDateTime
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -324,7 +324,7 @@ Resources:
   LinkTimelineEventsFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::LinkEvents
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::LinkEvents
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -347,7 +347,7 @@ Resources:
   UnLinkTimelineEventsFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::UnlinkEvents
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::UnlinkEvents
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -370,7 +370,7 @@ Resources:
   GetLinkedTimelineEventsFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent::GetLinkedTimelineEvents
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::GetLinkedTimelineEvents
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -393,7 +393,7 @@ Resources:
   CreateAttachmentFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::Create
+       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment.TimelineEventAttachment::Create
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
        Policies:
@@ -416,7 +416,7 @@ Resources:
   EditTitleAttachmentFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::EditTitle
+       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment.TimelineEventAttachment::EditTitle
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
        Policies:
@@ -439,7 +439,7 @@ Resources:
   DeleteAttachmentFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::Delete
+       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment.TimelineEventAttachment::Delete
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
        Policies:
@@ -462,7 +462,7 @@ Resources:
   GenerateUploadPresignedUrl:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::GenerateUploadPresignedUrl
+       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment.TimelineEventAttachment::GenerateUploadPresignedUrl
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
        Policies:
@@ -483,7 +483,7 @@ Resources:
   GenerateGetPresignedUrl:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment::GenerateGetPresignedUrl
+       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment.TimelineEventAttachment::GenerateGetPresignedUrl
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
        Policies:
