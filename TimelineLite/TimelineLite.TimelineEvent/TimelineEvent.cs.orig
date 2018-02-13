@@ -1,11 +1,15 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
-using Timelinelite.Core;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
+using TimelineLite.Requests;
+using TimelineLite.Requests.TimelineEvents;
+using TimelineLite.Responses;
+using TimelineLite.StorageModels;
+using TimelineLite.StorageRepos;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -183,12 +187,17 @@ namespace TimelineLite.TimelineEvent
         private static APIGatewayProxyResponse GetLinkedTimelineEvents(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            request.Headers.TryGetValue("TimelineEventId", out var timelineEventId);
+            var timelineEventId = request.Headers["TimelineEventId"];
             ValidateTimelineEventId(timelineEventId);
 
             var repo = GetRepo(tenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventId);
             var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id);
+<<<<<<< HEAD
+            
+            Log($"Skipping: {skip}");
+=======
+>>>>>>> 9d8499ba395e0cbaff2bb7b0e08399092b61f786
             Log("Returning linked timeline events");
             foreach (var linkedModel in timelineEventLinkedModels)
             {
@@ -223,7 +232,7 @@ namespace TimelineLite.TimelineEvent
         private static APIGatewayProxyResponse GetTimelineEventAttachments(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            request.Headers.TryGetValue("TimelineEventId", out var timelineEventId);
+            var timelineEventId = request.Headers["TimelineEventId"];
             ValidateTimelineEventId(timelineEventId);
 
             var repo = GetRepo(tenantId);
