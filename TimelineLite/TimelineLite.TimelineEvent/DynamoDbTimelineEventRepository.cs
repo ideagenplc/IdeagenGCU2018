@@ -59,18 +59,15 @@ namespace TimelineLite.StorageRepos
             return Context.ScanAsync<TimelineEventLinkModel>(conditions).GetRemainingAsync().Result.Single();
         }
         
-        public IEnumerable<TimelineEventLinkModel> GetTimelineEventLinks(string timelineEventId, int skip)
+        public IEnumerable<TimelineEventLinkModel> GetTimelineEventLinks(string timelineEventId)
         {
-            var pageToken = CreatePaginationToken(skip);
-            
             var timelineEventLinkTable = Context.GetTargetTable<TimelineEventLinkModel>();
             var filter = CreateBaseQueryFilter();
             filter.AddCondition(nameof(TimelineEventLinkModel.TimelineEventId), QueryOperator.Equal, timelineEventId);
             
-            var config = CreateQueryConfiguration(filter, pageToken: pageToken);
+            var config = CreateQueryConfiguration(filter);
             var search = timelineEventLinkTable.Query(config);
             var timelineEventLinkedModels = Context.FromDocuments<TimelineEventLinkModel>(search.GetNextSetAsync().Result);
-            pageToken = search.PaginationToken;
            
             return timelineEventLinkedModels;
         }

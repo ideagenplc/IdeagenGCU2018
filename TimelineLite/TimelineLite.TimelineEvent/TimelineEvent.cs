@@ -192,7 +192,7 @@ namespace TimelineLite
 
             var repo = GetRepo(tenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventId);
-            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id, int.Parse(skip));
+            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id);
             
             Log($"Skipping: {skip}");
             Log("Returning linked timeline events");
@@ -215,7 +215,7 @@ namespace TimelineLite
 
             var repo = GetRepo(tenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventId);
-            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id, int.Parse(skip));
+            var timelineEventLinkedModels = repo.GetTimelineEventLinks(eventModel.Id);
             
             Log($"Skipping: {skip}");
             Log("Returning linked timeline events");

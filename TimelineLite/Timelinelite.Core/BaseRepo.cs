@@ -15,13 +15,11 @@ namespace TimelineLite.StorageRepos
             TenantId = tenantId;
             Context = new DynamoDBContext(client);
         }
-        protected static QueryOperationConfig CreateQueryConfiguration(QueryFilter filter, int pageSize = 20, string pageToken = "{}")
+        protected static QueryOperationConfig CreateQueryConfiguration(QueryFilter filter)
         {
             var queryOperationConfig = new QueryOperationConfig
             {
-                Limit = pageSize,
-                Filter = filter,
-                PaginationToken = pageToken,
+                Filter = filter
             };
             return queryOperationConfig;
         }
