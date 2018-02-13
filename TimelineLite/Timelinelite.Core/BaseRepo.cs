@@ -1,9 +1,8 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
-using TimelineLite.StorageModels;
 
-namespace TimelineLite.StorageRepos
+namespace Timelinelite.Core
 {
     public abstract class BaseRepository
     {

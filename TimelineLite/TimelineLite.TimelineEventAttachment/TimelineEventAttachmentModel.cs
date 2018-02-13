@@ -1,5 +1,5 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
-using TimelineLite.StorageModels;
+using Timelinelite.Core;
 
 namespace TimelineLite.TimelineEventAttachment
 {

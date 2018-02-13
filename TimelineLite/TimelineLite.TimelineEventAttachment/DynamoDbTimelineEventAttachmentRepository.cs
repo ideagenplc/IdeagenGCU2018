@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
-using TimelineLite.Core;
-using TimelineLite.StorageRepos;
+using Timelinelite.Core;
 
 namespace TimelineLite.TimelineEventAttachment
 {
