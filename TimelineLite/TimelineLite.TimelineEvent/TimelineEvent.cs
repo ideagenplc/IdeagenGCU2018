@@ -183,7 +183,7 @@ namespace TimelineLite.TimelineEvent
         private static APIGatewayProxyResponse GetLinkedTimelineEvents(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            var timelineEventId = request.Headers["TimelineEventId"];
+            request.Headers.TryGetValue("TimelineEventId", out var timelineEventId);
             ValidateTimelineEventId(timelineEventId);
 
             var repo = GetRepo(tenantId);
@@ -223,7 +223,7 @@ namespace TimelineLite.TimelineEvent
         private static APIGatewayProxyResponse GetTimelineEventAttachments(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            var timelineEventId = request.Headers["TimelineEventId"];
+            request.Headers.TryGetValue("TimelineEventId", out var timelineEventId);
             ValidateTimelineEventId(timelineEventId);
 
             var repo = GetRepo(tenantId);

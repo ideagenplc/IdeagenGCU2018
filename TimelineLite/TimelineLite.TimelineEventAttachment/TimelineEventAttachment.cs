@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
@@ -62,7 +63,7 @@ namespace TimelineLite.TimelineEventAttachment
         private static APIGatewayProxyResponse GenerateUploadAttachmentPresignedUrl(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            var attachmentId = request.Headers["AttachmentId"];
+            request.Headers.TryGetValue("AttachmentId", out var attachmentId);
             ValidateTimelineEventAttachmentId(attachmentId);
 
             var s3Client = new AmazonS3Client(RegionEndpoint.EUWest1);
@@ -79,7 +80,7 @@ namespace TimelineLite.TimelineEventAttachment
         private static APIGatewayProxyResponse GenerateGetAttachmentPresignedUrl(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            var attachmentId = request.Headers["AttachmentId"];
+            request.Headers.TryGetValue("AttachmentId", out var attachmentId);
             ValidateTimelineEventAttachmentId(attachmentId);
 
             var s3Client = new AmazonS3Client(RegionEndpoint.EUWest1);
