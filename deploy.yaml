@@ -320,6 +320,28 @@ Resources:
            Properties:
              Path: /TimelineEvent/EditEventDateTime
              Method: put
+  EditTimelineEventLocationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::EditLocation
+       Runtime: dotnetcore2.0
+       CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
+       Policies:
+         -
+           AmazonDynamoDBFullAccess
+         -
+           arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+         -
+           AWSXrayFullAccess
+       Timeout: 30
+       MemorySize: 3008
+       Tracing: Active
+       Events:
+         GetResource:
+           Type: Api
+           Properties:
+             Path: /TimelineEvent/Location
+             Method: put
 
   LinkTimelineEventsFunction:
     Type: AWS::Serverless::Function

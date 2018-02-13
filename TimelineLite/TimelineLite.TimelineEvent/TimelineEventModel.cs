@@ -10,5 +10,6 @@ namespace TimelineLite.TimelineEvent
         public string EventDateTime { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
+        public string Location { get; set; }
     }
 }

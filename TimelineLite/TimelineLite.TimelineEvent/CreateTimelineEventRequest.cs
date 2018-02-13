@@ -8,5 +8,6 @@ namespace TimelineLite.TimelineEvent
         public string Title;
         public string EventDateTime;
         public string Description;
+        public string Location;
     }
 }

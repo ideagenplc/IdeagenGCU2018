@@ -33,7 +33,12 @@ namespace TimelineLite.TimelineEvent
         {
             return Handle(() => EditTimelineEventDateTime(request));
         }
-        
+
+        public APIGatewayProxyResponse EditLocation(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => EditTimelineEventLocation(request));
+        }
+
         public APIGatewayProxyResponse DeleteEvent(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => DeleteTimelineEvent(request));
@@ -80,7 +85,8 @@ namespace TimelineLite.TimelineEvent
                 Id = timelineEventRequest.TimelineEventId,
                 Title = timelineEventRequest.Title,
                 EventDateTime = timelineEventRequest.EventDateTime,
-                Description = timelineEventRequest.Description
+                Description = timelineEventRequest.Description,
+                Location = timelineEventRequest.Location
             };
             Log($"Getting repo");
             GetRepo(timelineEventRequest.TenantId).CreateTimlineEvent(model);
@@ -112,6 +118,19 @@ namespace TimelineLite.TimelineEvent
             var repo = GetRepo(timelineEventRequest.TenantId);
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.Description = timelineEventRequest.Desciption;
+            repo.SaveTimelineEventModel(model);
+            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+        }
+
+        private static APIGatewayProxyResponse EditTimelineEventLocation(APIGatewayProxyRequest request)
+        {
+            var timelineEventRequest = RequestHelper.ParsePutRequestBody<EditTimelineEventLocationRequest>(request);
+
+            ValidateTimelineEventId(timelineEventRequest.TimelineEventId);
+
+            var repo = GetRepo(timelineEventRequest.TenantId);
+            var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
+            model.Location = timelineEventRequest.Location;
             repo.SaveTimelineEventModel(model);
             return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }

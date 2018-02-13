@@ -3,6 +3,7 @@ using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using Newtonsoft.Json;
 using Timelinelite.Core;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -67,7 +68,7 @@ namespace TimelineLite.Timeline
 
             var repo = GetRepository(createTimelineRequest);
 
-            var timeline = new TimelineModel
+            var model = new TimelineModel
             {
                 Id = createTimelineRequest.TimelineId,
                 Title = createTimelineRequest.Title,
@@ -75,8 +76,8 @@ namespace TimelineLite.Timeline
                 IsDeleted = false
             };
 
-            repo.CreateTimeline(timeline);
-            return ResponseHelper.WrapResponse($"{timeline}");
+            repo.CreateTimeline(model);
+            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
 
         private static APIGatewayProxyResponse EditTimelineTitle(APIGatewayProxyRequest request)
@@ -92,7 +93,7 @@ namespace TimelineLite.Timeline
             model.Title = editTimelineTitleRequest.Title;
             repo.SaveModel(model);
 
-            return ResponseHelper.WrapResponse($"{model}");
+            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
 
         private static APIGatewayProxyResponse DeleteTimeline(APIGatewayProxyRequest request)
@@ -106,7 +107,7 @@ namespace TimelineLite.Timeline
             var model = repo.GetModel(deleteTimelineRequest.TimelineId);
             repo.DeleteTimeline(model);
 
-            return ResponseHelper.WrapResponse($"{model}");
+            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
 
         private static APIGatewayProxyResponse LinkEventToTimeline(APIGatewayProxyRequest request)
@@ -153,7 +154,7 @@ namespace TimelineLite.Timeline
             var linkRepo = GetRepository(tenantId);
 
             var events = linkRepo.GetLinkedEvents(timelineId);
-            return ResponseHelper.WrapResponse(events);
+            return ResponseHelper.WrapResponse(JsonConvert.SerializeObject(events));
         }
 
         private static APIGatewayProxyResponse GetTimeline(APIGatewayProxyRequest request)
@@ -165,7 +166,7 @@ namespace TimelineLite.Timeline
             var repo = GetRepository(tenantId);
             
             var model = repo.GetModel(timelineId);
-            return ResponseHelper.WrapResponse(model);
+            return ResponseHelper.WrapResponse(JsonConvert.SerializeObject(model));
         }
 
         private static APIGatewayProxyResponse GetAllTimelines(APIGatewayProxyRequest request)
@@ -173,7 +174,7 @@ namespace TimelineLite.Timeline
             var tenantId = request.AuthoriseGetRequest();
             var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), tenantId);
             var models = repo.GetModels();
-            return ResponseHelper.WrapResponse(models);
+            return ResponseHelper.WrapResponse(JsonConvert.SerializeObject(models));
         }
         
         private static DynamoDbTimelineRepository GetRepository(BaseRequest request)
