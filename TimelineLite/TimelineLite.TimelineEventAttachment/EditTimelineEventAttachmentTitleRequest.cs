@@ -1,4 +1,6 @@
-﻿namespace TimelineLite.Requests.TimelineEventAttachments
+﻿using TimelineLite.Requests;
+
+namespace TimelineLite.TimelineEventAttachment
 {
     public class EditTimelineEventAttachmentTitleRequest : BaseRequest
     {
