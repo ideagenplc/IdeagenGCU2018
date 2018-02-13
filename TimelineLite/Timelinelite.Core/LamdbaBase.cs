@@ -1,15 +1,12 @@
 using System;
-using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Runtime.SharedInterfaces;
 using Amazon.SimpleDB;
 using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
-using TimelineLite.Core;
-using TimelineLite.Requests;
-using static TimelineLite.Responses.ResponseHelper;
-namespace TimelineLite
+
+namespace Timelinelite.Core
 {
     public abstract class LambdaBase
     {
@@ -24,11 +21,11 @@ namespace TimelineLite
             }
             catch (GCUException e)
             {
-                return WrapResponse(e.Message, 400);
+                return ResponseHelper.WrapResponse(e.Message, 400);
             }
             catch (Exception e)
             {
-                return WrapResponse($"Unexpected Exception : {e.Message}", 500);
+                return ResponseHelper.WrapResponse($"Unexpected Exception : {e.Message}", 500);
             }
         }
 

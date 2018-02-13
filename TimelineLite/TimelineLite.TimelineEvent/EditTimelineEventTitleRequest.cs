@@ -1,4 +1,6 @@
-﻿namespace TimelineLite.Requests.TimelineEvents
+﻿using Timelinelite.Core;
+
+namespace TimelineLite.TimelineEvent
 {
     public class EditTimelineEventTitleRequest : BaseRequest
     {

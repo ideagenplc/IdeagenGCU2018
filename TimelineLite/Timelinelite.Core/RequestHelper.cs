@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Net;
 using System.Net.Http;
-using System.Runtime.InteropServices.ComTypes;
 using Amazon;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.SimpleDB;
 using Amazon.SimpleDB.Model;
 using Amazon.XRay.Recorder.Core;
 using Newtonsoft.Json;
-using TimelineLite.Core;
 
-namespace TimelineLite.Requests
+namespace Timelinelite.Core
 {
     public static class RequestHelper
     {

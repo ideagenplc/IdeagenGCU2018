@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace TimelineLite.Core
+namespace Timelinelite.Core
 {
     public abstract class GCUException : Exception
     {

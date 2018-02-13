@@ -1,4 +1,4 @@
-﻿namespace TimelineLite.Requests
+﻿namespace Timelinelite.Core
 {
     public abstract class BaseRequest
     {

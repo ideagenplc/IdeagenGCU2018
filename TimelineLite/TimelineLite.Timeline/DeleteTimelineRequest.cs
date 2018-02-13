@@ -1,4 +1,6 @@
-﻿namespace TimelineLite.Requests
+﻿using Timelinelite.Core;
+
+namespace TimelineLite.Timeline
 {
     public class DeleteTimelineRequest : BaseRequest
     {

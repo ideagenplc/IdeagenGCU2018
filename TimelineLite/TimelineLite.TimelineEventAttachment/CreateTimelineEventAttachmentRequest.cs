@@ -1,4 +1,4 @@
-﻿using TimelineLite.Requests;
+﻿using Timelinelite.Core;
 
 namespace TimelineLite.TimelineEventAttachment
 {

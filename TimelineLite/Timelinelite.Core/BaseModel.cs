@@ -1,6 +1,6 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 
-namespace TimelineLite.StorageModels
+namespace Timelinelite.Core
 {
     public class BaseModel
     {

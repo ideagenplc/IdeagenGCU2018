@@ -1,7 +1,7 @@
 ﻿using Amazon.Lambda.APIGatewayEvents;
 using Newtonsoft.Json;
 
-namespace TimelineLite.Responses
+namespace Timelinelite.Core
 {
     public static class ResponseHelper
     {

@@ -2,10 +2,9 @@
 using System.Linq;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
-using TimelineLite.Core;
-using TimelineLite.StorageModels;
+using Timelinelite.Core;
 
-namespace TimelineLite.StorageRepos
+namespace TimelineLite.Timeline
 {
     public class DynamoDbTimelineRepository : BaseRepository
     {
