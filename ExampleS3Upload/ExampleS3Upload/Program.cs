@@ -94,14 +94,8 @@ namespace ExampleS3Upload
             }
         }
 
-        private static void UploadProgressCallback(object sender, UploadProgressChangedEventArgs e)
-        {
-            // Displays the operation identifier, and the transfer progress.
-            Console.WriteLine($"Uploaded {e.BytesSent} of {e.TotalBytesToSend} bytes. {e.ProgressPercentage} % complete...");
-        }
         private static void DownloadProgressCallback(object sender, DownloadProgressChangedEventArgs e)
         {
-            // Displays the operation identifier, and the transfer progress.
             Console.WriteLine($"Downloaded {e.BytesReceived} of {e.TotalBytesToReceive} bytes. {e.ProgressPercentage} % complete...");
         }
 
