@@ -1,0 +1,171 @@
+Description:
+    GCU IP3 Project - DynamoDB Tables
+
+Resources:
+    TimelineStorage:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+            -
+              AttributeName: Id
+              AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
+        KeySchema:
+            -
+              AttributeName: TenantId
+              KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        TableName: "TimelineStore"
+
+    TimelineEventLinkStorage:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+            -
+              AttributeName: Id
+              AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
+            -
+              AttributeName: TimelineEventId
+              AttributeType: S
+        KeySchema:
+            -
+              AttributeName: TenantId
+              KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
+
+        GlobalSecondaryIndexes:
+            -
+                IndexName: TimelineEventId-Index
+                KeySchema:
+                    -
+                        AttributeName: TimelineEventId
+                        KeyType: HASH
+                Projection:
+                    ProjectionType: ALL
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 5
+                    WriteCapacityUnits: 5
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+        TableName: "TimelineEventLinkStore"
+
+    TimelineTimelineEventLinkStorage:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+            -
+              AttributeName: Id
+              AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
+            -
+              AttributeName: TimelineId
+              AttributeType: S
+        KeySchema:
+            -
+              AttributeName: TenantId
+              KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
+
+        GlobalSecondaryIndexes:
+            -
+                IndexName: TimelineId-Index
+                KeySchema:
+                    -
+                        AttributeName: TimelineId
+                        KeyType: HASH
+                Projection:
+                    ProjectionType: ALL
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 5
+                    WriteCapacityUnits: 5
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+        TableName: "TimelineTimelineEventLinkStore"
+
+    EventStorage:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+            -
+              AttributeName: Id
+              AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
+        KeySchema:
+            -
+              AttributeName: TenantId
+              KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        TableName: "TimelineEventStore"
+
+    EventAttachmentLinkStorage:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+            -
+              AttributeName: Id
+              AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
+        KeySchema:
+            -
+              AttributeName: TenantId
+              KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        TableName: "EventAttachmentLinkStore"
+
+    AttachmentStorage:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+            -
+              AttributeName: Id
+              AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
+        KeySchema:
+            -
+              AttributeName: TenantId
+              KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        TableName: "AttachmentStore"
