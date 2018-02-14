@@ -107,7 +107,7 @@ namespace TimelineLite.Timeline
             var model = repo.GetModel(deleteTimelineRequest.TimelineId);
             repo.DeleteTimeline(model);
 
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse($"Deleted timeline {deleteTimelineRequest.TimelineId}");
         }
 
         private static APIGatewayProxyResponse LinkEventToTimeline(APIGatewayProxyRequest request)

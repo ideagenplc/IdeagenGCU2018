@@ -9,8 +9,9 @@ namespace ExampleS3Upload
     {
         private const string UploadAction = "UPLOAD";
         private const string GetAction = "GET";
-        private const string BaseUrl = "https://yx2yxri4le.execute-api.eu-west-1.amazonaws.com/Prod/";
-        private const string UploadActionUrl = "TimelineEventAttachment/GenerateUploadPresignedUrl";
+        private const string BaseUrl = " https://7ijdls0oa4.execute-api.eu-west-1.amazonaws.com/Prod/";
+        private const string GeneratePresignedUrl = "TimelineEventAttachment/GenerateUploadPresignedUrl";
+        private const string CreateUrl = "TimelineEventAttachment/Create";
         private const string GetActionUrl = "TimelineEventAttachment/GenerateGetPresignedUrl";
 
         private static void Main(string[] args)
@@ -57,13 +58,14 @@ namespace ExampleS3Upload
                 Console.WriteLine("Must enter filepath to upload object");
                 return;
             }
-            var url = GenerateUploadPreSignedUrl(filePath);
+            var fileName = Path.GetFileName(filePath);
+            var url = GenerateUploadPreSignedUrl(fileName);
             var httpRequest = WebRequest.Create(url) as HttpWebRequest;
             httpRequest.Method = "PUT";
             using (var dataStream = httpRequest.GetRequestStream())
             {
                 var buffer = new byte[18000];
-                using (var fileStream = new FileStream(Path.GetFileName(filePath), FileMode.Open, FileAccess.Read))
+                using (var fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
                 {
                     var bytesRead = 0;
                     while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
@@ -73,9 +75,27 @@ namespace ExampleS3Upload
                 }
             }
 
+            SendCreateAttachmentRequest(fileName);
+
             var response = httpRequest.GetResponse() as HttpWebResponse;
             Console.WriteLine($"Response status code: {response.StatusCode}");
             Console.ReadLine();
+        }
+
+        private static void SendCreateAttachmentRequest(string fileName)
+        {
+            using (var client = new WebClient())
+            {
+                var createAttachmentRequest = new CreateAttachmentRequest
+                {
+                    AuthToken = "1337",
+                    TenantId = "IDGDev",
+                    AttachmentId = Guid.NewGuid().ToString(),
+                    TimelineEventId = "ExampleTimelineId",
+                    Title = fileName
+                };
+                client.UploadString($"{BaseUrl}/{CreateUrl}", "PUT", JsonConvert.SerializeObject(createAttachmentRequest));
+            }
         }
 
         private static void DownloadObject()
@@ -101,7 +121,7 @@ namespace ExampleS3Upload
 
         private static string GenerateUploadPreSignedUrl(string fileName)
         {
-            var request = CreateHttpWebRequest(fileName, UploadActionUrl);
+            var request = CreateHttpWebRequest(fileName, GeneratePresignedUrl);
             using (var response = (HttpWebResponse)request.GetResponse())
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))

@@ -74,7 +74,5 @@ namespace TimelineLite.TimelineEvent
                 Context.FromDocuments<TimelineEventLinkModel>(search.GetNextSetAsync().Result);
             return timelineEventLinkedModels;
         }
-
-
     }
 }

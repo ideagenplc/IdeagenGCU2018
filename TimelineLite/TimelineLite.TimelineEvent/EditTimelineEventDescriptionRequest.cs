@@ -5,6 +5,6 @@ namespace TimelineLite.TimelineEvent
     public class EditTimelineEventDescriptionRequest : BaseRequest
     {
         public string TimelineEventId;
-        public string Desciption;
+        public string Description;
     }
 }

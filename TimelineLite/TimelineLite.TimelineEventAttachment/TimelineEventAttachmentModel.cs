@@ -3,7 +3,7 @@ using Timelinelite.Core;
 
 namespace TimelineLite.TimelineEventAttachment
 {
-    [DynamoDBTable("TimelineEventAttachmentStore")]
+    [DynamoDBTable("AttachmentStore")]
     public class TimelineEventAttachmentModel : BaseModel
     {
         public string Title { get; set; }

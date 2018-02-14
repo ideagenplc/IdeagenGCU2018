@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
 using Timelinelite.Core;
@@ -28,6 +29,18 @@ namespace TimelineLite.TimelineEventAttachment
             if (model == null)
                 throw new ValidationException($"No Timeline Event Attachment found with Id : {id}");
             return model;
+        }
+
+        public IEnumerable<TimelineEventAttachmentModel> GetTimelineEventLinks(string timelineEventId)
+        {
+            var timelineEventLinkTable = Context.GetTargetTable<TimelineEventAttachmentModel>();
+            var filter = CreateBaseQueryFilter();
+            filter.AddCondition(nameof(TimelineEventAttachmentModel.TimelineEventId), QueryOperator.Equal, timelineEventId);
+
+            var config = CreateQueryConfiguration(filter);
+            var search = timelineEventLinkTable.Query(config);
+            var timelineEventLinkedModels = Context.FromDocuments<TimelineEventAttachmentModel>(search.GetNextSetAsync().Result);
+            return timelineEventLinkedModels;
         }
 
         public void SaveModel(TimelineEventAttachmentModel model)

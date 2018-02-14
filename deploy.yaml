@@ -278,7 +278,7 @@ Resources:
   DeleteTimelineEventFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::Delete
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::DeleteEvent
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -340,7 +340,7 @@ Resources:
          GetResource:
            Type: Api
            Properties:
-             Path: /TimelineEvent/Location
+             Path: /TimelineEvent/EditLocation
              Method: put
 
   LinkTimelineEventsFunction:
@@ -392,7 +392,7 @@ Resources:
   GetLinkedTimelineEventsFunction:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::GetLinkedTimelineEvents
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::GetLinkedEvents
        Runtime: dotnetcore2.0
        CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
        Policies:
@@ -410,6 +410,29 @@ Resources:
            Type: Api
            Properties:
              Path: /TimelineEvent/GetLinkedTimelineEvents
+             Method: get
+             
+  GetTimelineEventFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::GetEvent
+       Runtime: dotnetcore2.0
+       CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
+       Policies:
+         -
+           AmazonDynamoDBFullAccess
+         -
+           arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+         -
+           AWSXrayFullAccess
+       Timeout: 30
+       Tracing: Active
+       MemorySize: 3008
+       Events:
+         GetResource:
+           Type: Api
+           Properties:
+             Path: /TimelineEvent/GetTimelineEvent
              Method: get
   
   CreateAttachmentFunction:
@@ -495,13 +518,54 @@ Resources:
          -
            arn:aws:iam::aws:policy/AmazonS3FullAccess
        Timeout: 30
+       MemorySize: 3008
        Events:
          GetResource:
            Type: Api
            Properties:
              Path: /TimelineEventAttachment/GenerateUploadPresignedUrl
              Method: get
-                 
+             
+  GetAttachmentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment.TimelineEventAttachment::GetAttachment
+       Runtime: dotnetcore2.0
+       CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
+       Policies:
+         -
+           AmazonDynamoDBFullAccess
+         -
+           arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+       Timeout: 30
+       MemorySize: 3008
+       Events:
+         GetResource:
+           Type: Api
+           Properties:
+             Path: /TimelineEventAttachment/GetAttachment
+             Method: get
+             
+  GetAttachmentsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+       Handler: TimelineLite.TimelineEventAttachment::TimelineLite.TimelineEventAttachment.TimelineEventAttachment::GetAttachments
+       Runtime: dotnetcore2.0
+       CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEventAttachment.zip
+       Policies:
+         -
+           AmazonDynamoDBFullAccess
+         -
+           arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+       Timeout: 30
+       MemorySize: 3008
+       Events:
+         GetResource:
+           Type: Api
+           Properties:
+             Path: /TimelineEventAttachment/GetAttachments
+             Method: get
+                                  
   GenerateGetPresignedUrl:
     Type: AWS::Serverless::Function
     Properties:
@@ -516,6 +580,7 @@ Resources:
          -
            arn:aws:iam::aws:policy/AmazonS3FullAccess
        Timeout: 30
+       MemorySize: 3008
        Events:
          GetResource:
            Type: Api

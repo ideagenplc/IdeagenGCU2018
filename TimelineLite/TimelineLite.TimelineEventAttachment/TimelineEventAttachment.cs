@@ -32,6 +32,16 @@ namespace TimelineLite.TimelineEventAttachment
             return Handle(() => GenerateGetAttachmentPresignedUrl(request));
         }
 
+        public APIGatewayProxyResponse GetAttachment(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => GetTimelineEventAttachment(request));
+        }
+
+        public APIGatewayProxyResponse GetAttachments(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => GetTimelineEventAttachments(request));
+        }
+
         public APIGatewayProxyResponse EditTitle(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return Handle(() => EditAttachmentTitle(request));
@@ -49,15 +59,15 @@ namespace TimelineLite.TimelineEventAttachment
             ValidateTimelineEventAttachentTitle(timelineEventAttachmentRequest.Title);
             ValidateTimelineEventId(timelineEventAttachmentRequest.TimelineEventId);
 
-            var timelineEventAttachment = new TimelineEventAttachmentModel
+            var model = new TimelineEventAttachmentModel
             {
                 Id = timelineEventAttachmentRequest.AttachmentId,
                 Title = timelineEventAttachmentRequest.Title,
                 TimelineEventId = timelineEventAttachmentRequest.TimelineEventId
             };
-            GetRepo(timelineEventAttachmentRequest.TenantId).CreateTimlineEventAttachment(timelineEventAttachment);
+            GetRepo(timelineEventAttachmentRequest.TenantId).CreateTimlineEventAttachment(model);
 
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(timelineEventAttachment)}");
+            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
         }
         
         private static APIGatewayProxyResponse GenerateUploadAttachmentPresignedUrl(APIGatewayProxyRequest request)
@@ -69,7 +79,7 @@ namespace TimelineLite.TimelineEventAttachment
             var s3Client = new AmazonS3Client(RegionEndpoint.EUWest1);
             var presignedUrl = s3Client.GetPreSignedURL(new GetPreSignedUrlRequest
             {
-                BucketName = "stewartw-test-bucket",
+                BucketName = "ideagengcu",
                 Verb = HttpVerb.PUT,
                 Key = $"{tenantId}/{attachmentId}",
                 Expires = DateTime.Now.AddMinutes(15)
@@ -86,12 +96,30 @@ namespace TimelineLite.TimelineEventAttachment
             var s3Client = new AmazonS3Client(RegionEndpoint.EUWest1);
             var presignedUrl = s3Client.GetPreSignedURL(new GetPreSignedUrlRequest
             {
-                BucketName = "stewartw-test-bucket",
+                BucketName = "ideagengcu",
                 Verb = HttpVerb.GET,
                 Key = $"{tenantId}/{attachmentId}",
                 Expires = DateTime.Now.AddMinutes(15)
             });
             return ResponseHelper.WrapResponse(presignedUrl);
+        }
+
+        private static APIGatewayProxyResponse GetTimelineEventAttachment(APIGatewayProxyRequest request)
+        {
+            var tenantId = request.AuthoriseGetRequest();
+            request.Headers.TryGetValue("AttachmentId", out var attachmentId);
+            ValidateTimelineEventAttachmentId(attachmentId);
+            var model = GetRepo(tenantId).GetModel(attachmentId);
+            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+        }
+
+        private static APIGatewayProxyResponse GetTimelineEventAttachments(APIGatewayProxyRequest request)
+        {
+            var tenantId = request.AuthoriseGetRequest();
+            request.Headers.TryGetValue("TimelineEventId", out var timelineEventId);
+            ValidateTimelineEventAttachmentId(timelineEventId);
+            var models = GetRepo(tenantId).GetTimelineEventLinks(timelineEventId);
+            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(models)}");
         }
 
         private static APIGatewayProxyResponse EditAttachmentTitle(APIGatewayProxyRequest request)

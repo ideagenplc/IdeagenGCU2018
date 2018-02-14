@@ -133,10 +133,16 @@ Resources:
             -
               AttributeName: Id
               AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
         KeySchema:
             -
-              AttributeName: Id
+              AttributeName: TenantId
               KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
@@ -149,10 +155,16 @@ Resources:
             -
               AttributeName: Id
               AttributeType: S
+            -
+              AttributeName: TenantId
+              AttributeType: S
         KeySchema:
             -
-              AttributeName: Id
+              AttributeName: TenantId
               KeyType: HASH
+            -
+              AttributeName: Id
+              KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
