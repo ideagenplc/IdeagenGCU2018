@@ -137,29 +137,6 @@ Resources:
              Path: /Timeline/GetTimeline
              Method: get
 
-  UnlinkEventFromTimelineFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::UnlinkEvent
-       Runtime: dotnetcore2.0
-       CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
-       Policies:
-         -
-           AmazonDynamoDBFullAccess
-         -
-           arn:aws:iam::346310877561:policy/SimpleDbFullAccess
-         -
-           AWSXrayFullAccess
-       Timeout: 15
-       MemorySize: 3008
-       Tracing: Active
-       Events:
-         GetResource:
-           Type: Api
-           Properties:
-             Path: /Timeline/UnlinkEvent
-             Method: put
-
   GetAllTimelinesFunction:
     Type: AWS::Serverless::Function
     Properties:

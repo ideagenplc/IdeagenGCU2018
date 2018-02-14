@@ -9,7 +9,7 @@ namespace ExampleS3Upload
     {
         private const string UploadAction = "UPLOAD";
         private const string GetAction = "GET";
-        private const string BaseUrl = " https://7ijdls0oa4.execute-api.eu-west-1.amazonaws.com/Prod/";
+        private const string BaseUrl = "https://gcu.ideagen-development.com/";
         private const string GeneratePresignedUrl = "TimelineEventAttachment/GenerateUploadPresignedUrl";
         private const string CreateUrl = "TimelineEventAttachment/Create";
         private const string GetActionUrl = "TimelineEventAttachment/GenerateGetPresignedUrl";
@@ -94,7 +94,7 @@ namespace ExampleS3Upload
                     TimelineEventId = "ExampleTimelineId",
                     Title = fileName
                 };
-                client.UploadString($"{BaseUrl}/{CreateUrl}", "PUT", JsonConvert.SerializeObject(createAttachmentRequest));
+                client.UploadString($"{BaseUrl}{CreateUrl}", "PUT", JsonConvert.SerializeObject(createAttachmentRequest));
             }
         }
 
