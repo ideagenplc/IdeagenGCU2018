@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Amazon;
@@ -45,11 +46,11 @@ namespace Timelinelite.Core
         {
             if (request.HttpMethod != "GET")
                 throw new HttpRequestException("Request is not a GET");
-            request.Headers.TryGetValue("TenantId", out var tenant);
+            var tenant = request.Headers.DefaultIfEmpty(new KeyValuePair<string, string>()).SingleOrDefault(x => x.Key.Equals("TenantId", StringComparison.InvariantCultureIgnoreCase)).Value;
             if (string.IsNullOrWhiteSpace(tenant))
                 throw new AuthenticationException("Header: TenantId has not been set on GET Request");
             var authToken = GetAuthToken(tenant);
-            request.Headers.TryGetValue("AuthToken", out var recievedAuthToken);
+            var recievedAuthToken = request.Headers.DefaultIfEmpty(new KeyValuePair<string, string>()).SingleOrDefault(x => x.Key.Equals("AuthToken", StringComparison.InvariantCultureIgnoreCase)).Value;
             if (string.IsNullOrWhiteSpace(recievedAuthToken))
                 throw new AuthenticationException("Header: AuthToken has not been set on GET Request");
 
