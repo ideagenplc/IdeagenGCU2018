@@ -92,7 +92,7 @@ namespace TimelineLite.TimelineEvent
             GetRepo(timelineEventRequest.TenantId).CreateTimlineEvent(model);
             
             Log($"Wrapping response");
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
 
         private static APIGatewayProxyResponse EditTimelineEventTitle(APIGatewayProxyRequest request)
@@ -106,7 +106,7 @@ namespace TimelineLite.TimelineEvent
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.Title = timelineEventRequest.Title;
             repo.SaveTimelineEventModel(model);
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
 
         private static APIGatewayProxyResponse EditTimelineEventDescription(APIGatewayProxyRequest request)
@@ -119,7 +119,7 @@ namespace TimelineLite.TimelineEvent
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.Description = timelineEventRequest.Description;
             repo.SaveTimelineEventModel(model);
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
 
         private static APIGatewayProxyResponse EditTimelineEventLocation(APIGatewayProxyRequest request)
@@ -132,7 +132,7 @@ namespace TimelineLite.TimelineEvent
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.Location = timelineEventRequest.Location;
             repo.SaveTimelineEventModel(model);
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
 
         private static APIGatewayProxyResponse EditTimelineEventDateTime(APIGatewayProxyRequest request)
@@ -146,7 +146,7 @@ namespace TimelineLite.TimelineEvent
             var model = repo.GetTimelineEventModel(timelineEventRequest.TimelineEventId);
             model.EventDateTime = timelineEventRequest.EventDateTime;
             repo.SaveTimelineEventModel(model);
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
 
         private static APIGatewayProxyResponse DeleteTimelineEvent(APIGatewayProxyRequest request)
@@ -181,7 +181,7 @@ namespace TimelineLite.TimelineEvent
             };
             repo.SaveTimelineEventLinkedModel(timelineEventLinkedModel);
 
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(timelineEventLinkedModel)}");
+            return ResponseHelper.WrapResponse(timelineEventLinkedModel);
         }
 
         private static APIGatewayProxyResponse UnlinkTimelineEvents(APIGatewayProxyRequest request)
@@ -213,7 +213,7 @@ namespace TimelineLite.TimelineEvent
                 Log(linkedModel.ToString());
             }
 
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(timelineEventLinkedModels)}");
+            return ResponseHelper.WrapResponse(timelineEventLinkedModels);
         }
 
         private static APIGatewayProxyResponse GetTimelineEvent(APIGatewayProxyRequest request)
@@ -225,7 +225,7 @@ namespace TimelineLite.TimelineEvent
             var repo = GetRepo(tenantId);
             var eventModel = repo.GetTimelineEventModel(timelineEventId);
 
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(eventModel)}");
+            return ResponseHelper.WrapResponse(eventModel);
         }
 
         private static DynamoDbTimelineEventRepository GetRepo(string tenantId)

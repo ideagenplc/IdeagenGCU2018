@@ -67,13 +67,13 @@ namespace TimelineLite.TimelineEventAttachment
             };
             GetRepo(timelineEventAttachmentRequest.TenantId).CreateTimlineEventAttachment(model);
 
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
         
         private static APIGatewayProxyResponse GenerateUploadAttachmentPresignedUrl(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            request.Headers.TryGetValue("AttachmentId", out var attachmentId);
+            request.TryGetHeader("AttachmentId", out var attachmentId);
             ValidateTimelineEventAttachmentId(attachmentId);
 
             var s3Client = new AmazonS3Client(RegionEndpoint.EUWest1);
@@ -90,7 +90,7 @@ namespace TimelineLite.TimelineEventAttachment
         private static APIGatewayProxyResponse GenerateGetAttachmentPresignedUrl(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            request.Headers.TryGetValue("AttachmentId", out var attachmentId);
+            request.TryGetHeader("AttachmentId", out var attachmentId);
             ValidateTimelineEventAttachmentId(attachmentId);
 
             var s3Client = new AmazonS3Client(RegionEndpoint.EUWest1);
@@ -107,19 +107,19 @@ namespace TimelineLite.TimelineEventAttachment
         private static APIGatewayProxyResponse GetTimelineEventAttachment(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            request.Headers.TryGetValue("AttachmentId", out var attachmentId);
+            request.TryGetHeader("AttachmentId", out var attachmentId);
             ValidateTimelineEventAttachmentId(attachmentId);
             var model = GetRepo(tenantId).GetModel(attachmentId);
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
 
         private static APIGatewayProxyResponse GetTimelineEventAttachments(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            request.Headers.TryGetValue("TimelineEventId", out var timelineEventId);
+            request.TryGetHeader("TimelineEventId", out var timelineEventId);
             ValidateTimelineEventAttachmentId(timelineEventId);
             var models = GetRepo(tenantId).GetTimelineEventLinks(timelineEventId);
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(models)}");
+            return ResponseHelper.WrapResponse(models);
         }
 
         private static APIGatewayProxyResponse EditAttachmentTitle(APIGatewayProxyRequest request)
@@ -133,7 +133,7 @@ namespace TimelineLite.TimelineEventAttachment
             var model = repo.GetModel(timelineEventAttachmentRequest.AttachmentId);
             model.Title = timelineEventAttachmentRequest.Title;
             repo.SaveModel(model);
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
         
         private static APIGatewayProxyResponse DeleteAttachment(APIGatewayProxyRequest request)

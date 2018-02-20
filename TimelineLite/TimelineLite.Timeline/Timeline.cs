@@ -77,7 +77,7 @@ namespace TimelineLite.Timeline
             };
 
             repo.CreateTimeline(model);
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
 
         private static APIGatewayProxyResponse EditTimelineTitle(APIGatewayProxyRequest request)
@@ -148,25 +148,25 @@ namespace TimelineLite.Timeline
         {
             var tenantId = request.AuthoriseGetRequest();
             
-            request.Headers.TryGetValue("TimelineId", out var timelineId);
+            request.TryGetHeader("TimelineId", out var timelineId);
             timelineId.ValidateString("Invalid Timeline Id");
 
             var linkRepo = GetRepository(tenantId);
 
             var events = linkRepo.GetLinkedEvents(timelineId);
-            return ResponseHelper.WrapResponse(JsonConvert.SerializeObject(events));
+            return ResponseHelper.WrapResponse(events);
         }
 
         private static APIGatewayProxyResponse GetTimeline(APIGatewayProxyRequest request)
         {
             var tenantId = request.AuthoriseGetRequest();
-            request.Headers.TryGetValue("TimelineId", out var timelineId);
+            request.TryGetHeader("TimelineId", out var timelineId);
 
             timelineId.ValidateString("Invalid Timeline Id");
             var repo = GetRepository(tenantId);
             
             var model = repo.GetModel(timelineId);
-            return ResponseHelper.WrapResponse(JsonConvert.SerializeObject(model));
+            return ResponseHelper.WrapResponse(model);
         }
 
         private static APIGatewayProxyResponse GetAllTimelines(APIGatewayProxyRequest request)
@@ -174,7 +174,7 @@ namespace TimelineLite.Timeline
             var tenantId = request.AuthoriseGetRequest();
             var repo = new DynamoDbTimelineRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), tenantId);
             var models = repo.GetModels();
-            return ResponseHelper.WrapResponse(JsonConvert.SerializeObject(models));
+            return ResponseHelper.WrapResponse(models);
         }
         
         private static DynamoDbTimelineRepository GetRepository(BaseRequest request)
