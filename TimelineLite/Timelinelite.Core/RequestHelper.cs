@@ -46,16 +46,19 @@ namespace Timelinelite.Core
         {
             if (request.HttpMethod != "GET")
                 throw new HttpRequestException("Request is not a GET");
-            var tenant = request.Headers.DefaultIfEmpty(new KeyValuePair<string, string>()).SingleOrDefault(x => x.Key.Equals("TenantId", StringComparison.InvariantCultureIgnoreCase)).Value;
+            request.TryGetHeader("TenantId", out var tenant);
             if (string.IsNullOrWhiteSpace(tenant))
                 throw new AuthenticationException("Header: TenantId has not been set on GET Request");
             var authToken = GetAuthToken(tenant);
-            var recievedAuthToken = request.Headers.DefaultIfEmpty(new KeyValuePair<string, string>()).SingleOrDefault(x => x.Key.Equals("AuthToken", StringComparison.InvariantCultureIgnoreCase)).Value;
+            request.TryGetHeader("AuthToken", out var recievedAuthToken);
             if (string.IsNullOrWhiteSpace(recievedAuthToken))
                 throw new AuthenticationException("Header: AuthToken has not been set on GET Request");
 
             if (authToken == recievedAuthToken)
+            {
+                AWSXRayRecorder.Instance.AddAnnotation("Tenant", tenant);
                 return tenant;
+            }
             throw new AuthenticationException($"Invalid Authorisation Token: {recievedAuthToken}");
         }
 
@@ -80,6 +83,13 @@ namespace Timelinelite.Core
                     $"Error retrieving authentication token. Is {tenantId} a valid tenantId?");
             }
             return authToken;
+        }
+
+        public static bool TryGetHeader(this APIGatewayProxyRequest request, string header, out string value)
+        {
+            value = request.Headers.DefaultIfEmpty(new KeyValuePair<string, string>())
+                .SingleOrDefault(x => x.Key.Equals(header, StringComparison.InvariantCultureIgnoreCase)).Value;
+            return !string.IsNullOrWhiteSpace(value);
         }
     }
 }
