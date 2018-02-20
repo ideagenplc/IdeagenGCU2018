@@ -55,11 +55,10 @@ namespace TimelineLite.TimelineEvent
 
             var config = CreateQueryConfiguration(filter);
             var search = table.Query(config);
-            var model = Context.FromDocuments<TimelineEventLinkModel>(search.GetRemainingAsync().Result)
-                .SingleOrDefault();
-            if (model == null)
+            var models = Context.FromDocuments<TimelineEventLinkModel>(search.GetRemainingAsync().Result).ToList();
+            if (!models.Any())
                 throw new ValidationException($"There's no link between {timelineId} and {linkedToTimelineEventId}");
-            Context.DeleteAsync<TimelineEventLinkModel>(model).Wait();
+            Context.DeleteAsync<TimelineEventLinkModel>(models).Wait();
         }
 
         public IEnumerable<TimelineEventLinkModel> GetTimelineEventLinks(string timelineEventId)

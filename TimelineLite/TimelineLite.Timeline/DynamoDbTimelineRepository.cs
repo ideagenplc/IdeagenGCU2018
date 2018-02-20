@@ -33,11 +33,10 @@ namespace TimelineLite.Timeline
 
             var config = CreateQueryConfiguration(filter);
             var search = table.Query(config);
-            var model = Context.FromDocuments<TimelineTimelineEventLinkModel>(search.GetRemainingAsync().Result)
-                .SingleOrDefault();
-            if (model == null)
+            var models = Context.FromDocuments<TimelineTimelineEventLinkModel>(search.GetRemainingAsync().Result).ToList();
+            if (models.Any())
                 throw new ValidationException($"There's no link between {timelineId} and {eventId}");
-            Context.DeleteAsync<TimelineTimelineEventLinkModel>(model).Wait();
+            Context.DeleteAsync<TimelineTimelineEventLinkModel>(models).Wait();
         }
 
         public IEnumerable<TimelineTimelineEventLinkModel> GetLinkedEvents(string timelineId)
@@ -60,7 +59,7 @@ namespace TimelineLite.Timeline
             filter.AddCondition(nameof(TimelineModel.Id), QueryOperator.Equal, id);
             var config = CreateQueryConfiguration(filter);
             var search = table.Query(config);
-            var model = Context.FromDocuments<TimelineModel>(search.GetRemainingAsync().Result).SingleOrDefault();
+            var model = Context.FromDocuments<TimelineModel>(search.GetRemainingAsync().Result).FirstOrDefault();
             if (model == null)
                 throw new ValidationException($"No Timeline found with Id : {id}");
             return model;
