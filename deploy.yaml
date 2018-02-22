@@ -24,6 +24,7 @@ Resources:
              Path: /Timeline/Create
              Method: put
 
+
   EditTimelineTitleFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -163,9 +164,9 @@ Resources:
   GetLinkedEvents:
     Type: AWS::Serverless::Function
     Properties:
-       Handler: TimelineLite.TimelineEvent::TimelineLite.TimelineEvent.TimelineEvent::GetEvents
+       Handler: TimelineLite.Timeline::TimelineLite.Timeline.Timeline::GetEvents
        Runtime: dotnetcore2.0
-       CodeUri: s3://stewartw-test-bucket/TimelineLite.TimelineEvent.zip
+       CodeUri: s3://stewartw-test-bucket/TimelineLite.Timeline.zip
        Policies:
           -
             AmazonDynamoDBFullAccess
@@ -204,8 +205,8 @@ Resources:
            Type: Api
            Properties:
              Path: /TimelineEvent/Create
-             Method: put     
-             
+             Method: put
+
   EditTimelineEventTitleFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -228,7 +229,7 @@ Resources:
            Properties:
              Path: /TimelineEvent/EditTitle
              Method: put
-                 
+
   EditTimelineEventDescriptionFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -273,8 +274,8 @@ Resources:
            Type: Api
            Properties:
              Path: /TimelineEvent/Delete
-             Method: put            
-                 
+             Method: put
+
   EditTimelineEventEventDateTimeFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -365,7 +366,7 @@ Resources:
            Properties:
              Path: /TimelineEvent/UnlinkEvents
              Method: put
-                 
+
   GetLinkedTimelineEventsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -388,7 +389,7 @@ Resources:
            Properties:
              Path: /TimelineEvent/GetLinkedTimelineEvents
              Method: get
-             
+
   GetTimelineEventFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -411,7 +412,7 @@ Resources:
            Properties:
              Path: /TimelineEvent/GetTimelineEvent
              Method: get
-  
+
   CreateAttachmentFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -434,7 +435,7 @@ Resources:
            Properties:
              Path: /TimelineEventAttachment/Create
              Method: put
-                 
+
   EditTitleAttachmentFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -457,7 +458,7 @@ Resources:
            Properties:
              Path: /TimelineEventAttachment/EditTitle
              Method: put
-                 
+
   DeleteAttachmentFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -502,7 +503,7 @@ Resources:
            Properties:
              Path: /TimelineEventAttachment/GenerateUploadPresignedUrl
              Method: get
-             
+
   GetAttachmentFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -522,7 +523,7 @@ Resources:
            Properties:
              Path: /TimelineEventAttachment/GetAttachment
              Method: get
-             
+
   GetAttachmentsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -542,7 +543,7 @@ Resources:
            Properties:
              Path: /TimelineEventAttachment/GetAttachments
              Method: get
-                                  
+
   GenerateGetPresignedUrl:
     Type: AWS::Serverless::Function
     Properties:
@@ -564,7 +565,7 @@ Resources:
            Properties:
              Path: /TimelineEventAttachment/GenerateGetPresignedUrl
              Method: get
-             
+
   GetAllTimelinesAndEventsFunction:
     Type: AWS::Serverless::Function
     Properties:
