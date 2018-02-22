@@ -1,4 +1,5 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
+﻿using System.Collections.Generic;
+using Amazon.Lambda.APIGatewayEvents;
 using Newtonsoft.Json;
 
 namespace Timelinelite.Core
@@ -17,6 +18,17 @@ namespace Timelinelite.Core
                     }),
                 StatusCode = statuscode
             };
+            return response;
+        }
+        public static APIGatewayProxyResponse PlainTextResponse(object body, int statuscode = 200)
+        {
+            var response = new APIGatewayProxyResponse
+            {
+                Body = body.ToString(),
+                StatusCode = statuscode,
+                Headers = new Dictionary<string, string>()
+            };
+            response.Headers.Add("Content-Type","text/plain");
             return response;
         }
     }

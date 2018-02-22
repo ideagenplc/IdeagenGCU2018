@@ -84,7 +84,7 @@ namespace TimelineLite.TimelineEventAttachment
                 Key = $"{tenantId}/{attachmentId}",
                 Expires = DateTime.Now.AddMinutes(15)
             });
-            return ResponseHelper.WrapResponse(presignedUrl);
+            return ResponseHelper.PlainTextResponse(presignedUrl);
         }
 
         private static APIGatewayProxyResponse GenerateGetAttachmentPresignedUrl(APIGatewayProxyRequest request)
@@ -101,7 +101,7 @@ namespace TimelineLite.TimelineEventAttachment
                 Key = $"{tenantId}/{attachmentId}",
                 Expires = DateTime.Now.AddMinutes(15)
             });
-            return ResponseHelper.WrapResponse(presignedUrl);
+            return ResponseHelper.PlainTextResponse(presignedUrl);
         }
 
         private static APIGatewayProxyResponse GetTimelineEventAttachment(APIGatewayProxyRequest request)

@@ -58,7 +58,12 @@ namespace TimelineLite.TimelineEvent
             var models = Context.FromDocuments<TimelineEventLinkModel>(search.GetRemainingAsync().Result).ToList();
             if (!models.Any())
                 throw new ValidationException($"There's no link between {timelineId} and {linkedToTimelineEventId}");
-            Context.DeleteAsync<TimelineEventLinkModel>(models).Wait();
+            
+            foreach (var model in models)
+            {
+                Context.DeleteAsync<TimelineEventLinkModel>(model).Wait();
+            }
+           
         }
 
         public IEnumerable<TimelineEventLinkModel> GetTimelineEventLinks(string timelineEventId)
