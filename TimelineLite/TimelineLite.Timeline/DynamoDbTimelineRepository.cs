@@ -34,7 +34,7 @@ namespace TimelineLite.Timeline
             var config = CreateQueryConfiguration(filter);
             var search = table.Query(config);
             var models = Context.FromDocuments<TimelineTimelineEventLinkModel>(search.GetRemainingAsync().Result).ToList();
-            if (models.Any())
+            if (!models.Any())
                 throw new ValidationException($"There's no link between {timelineId} and {eventId}");
             Context.DeleteAsync<TimelineTimelineEventLinkModel>(models).Wait();
         }
