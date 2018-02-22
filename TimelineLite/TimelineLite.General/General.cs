@@ -33,15 +33,14 @@ namespace TimelineLite.General
             var response = new GetAllTimelinesAndEventsResponse();
             foreach (var timelineModel in timelineModels)
             {
-                var timeline = new Responses.Timeline
+                response.Timelines.Add(new Responses.Timeline
                 {
                     Id = timelineModel.Id,
                     CreationTimeStamp = timelineModel.CreationTimeStamp,
                     IsDeleted = timelineModel.IsDeleted,
                     Title = timelineModel.Title,
                     TimelineEvents = GetTimelineEvents(timelineRepo.GetLinkedEvents(timelineModel.Id).Select(_ => _.TimelineEventId), timelineEventRepo)
-                };
-                response.Timelines.Add(timeline);
+                });
             }
 
             return ResponseHelper.WrapResponse(response);
