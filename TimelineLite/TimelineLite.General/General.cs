@@ -60,11 +60,12 @@ namespace TimelineLite.General
                     {"Access-Control-Allow-Origin", "*"},
                     {"Access-Control-Allow-Methods", "GET,PUT,OPTIONS"},
                     {
-                        "Access-Control-Allow-Origin",
-                        "Content-Type,X-mz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,,AuthToken,authtoken,TenantId,tenantid,timelineid,TimelineId"
+                        "Access-Control-Allow-Headers",
+                        "Content-Type,X-mz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,,AuthToken,authtoken,TenantId,tenantid,timelineid,TimelineId,TimelineEventId,timelineeventid,AttachmentId,attachmentid"
                     },
                     {"Content-Type", "application/json"}
-                }
+                },
+                StatusCode = 200
             };
             return response;
         }
@@ -75,6 +76,7 @@ namespace TimelineLite.General
                 .Select(timelineEventModel => new Responses.TimelineEvent
                 {
                     Id = timelineEventModel.Id,
+                    Title = timelineEventModel.Title,
                     Description = timelineEventModel.Description,
                     EventDateTime = timelineEventModel.EventDateTime,
                     IsDeleted = timelineEventModel.IsDeleted,

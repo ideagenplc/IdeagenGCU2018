@@ -69,6 +69,11 @@ namespace TimelineLite.TimelineEvent
             return Handle(() => LinkTimelineEvents(request));
         }
 
+        public APIGatewayProxyResponse GetAllEvents(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => GetAllTimelineEvents(request));
+        }
+
         private static APIGatewayProxyResponse CreateTimelineEvent(APIGatewayProxyRequest request)
         {
             Log("Create Timeline Request recieved");
@@ -226,6 +231,15 @@ namespace TimelineLite.TimelineEvent
             var eventModel = repo.GetTimelineEventModel(timelineEventId);
 
             return ResponseHelper.WrapResponse(eventModel);
+        }
+
+        private static APIGatewayProxyResponse GetAllTimelineEvents(APIGatewayProxyRequest request)
+        {
+            var tenantId = request.AuthoriseGetRequest();
+            var repo = GetRepo(tenantId);
+            var eventModels = repo.GetAllTimelineEventModels();
+
+            return ResponseHelper.WrapResponse(eventModels);
         }
 
         private static DynamoDbTimelineEventRepository GetRepo(string tenantId)
