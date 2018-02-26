@@ -18,6 +18,7 @@ namespace Timelinelite.Core
                     }),
                 StatusCode = statuscode
             };
+            response.Headers.Add("Access-Control-Allow-Origin","*");
             return response;
         }
         public static APIGatewayProxyResponse PlainTextResponse(object body, int statuscode = 200)
@@ -29,6 +30,7 @@ namespace Timelinelite.Core
                 Headers = new Dictionary<string, string>()
             };
             response.Headers.Add("Content-Type","text/plain");
+            response.Headers.Add("Access-Control-Allow-Origin","*");
             return response;
         }
     }

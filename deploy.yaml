@@ -585,5 +585,27 @@ Resources:
          GetResource:
            Type: Api
            Properties:
-             Path: /General/GetAllTimelinesAndEvent
+             Path: /Timeline/GetAllTimelinesAndEvent
              Method: get
+
+  GetAllTimelinesAndEventsOptionsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+       Handler: TimelineLite.General::TimelineLite.General.General::GetOptions
+       Runtime: dotnetcore2.0
+       CodeUri: s3://stewartw-test-bucket/TimelineLite.General.zip
+       Policies:
+         -
+           AmazonDynamoDBFullAccess
+         -
+           arn:aws:iam::346310877561:policy/SimpleDbFullAccess
+         -
+           arn:aws:iam::aws:policy/AmazonS3FullAccess
+       Timeout: 30
+       MemorySize: 3008
+       Events:
+         GetResource:
+           Type: Api
+           Properties:
+             Path: /Timeline/GetAllTimelinesAndEvent
+             Method: options
