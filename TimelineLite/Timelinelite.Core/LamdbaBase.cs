@@ -29,6 +29,25 @@ namespace Timelinelite.Core
             }
         }
 
+        protected static APIGatewayProxyResponse HandleOptions(Func<APIGatewayProxyResponse> handler)
+        {
+            AWSSDKHandler.RegisterXRay<IAmazonDynamoDB>();
+            AWSSDKHandler.RegisterXRay<IAmazonSimpleDB>();
+            AWSSDKHandler.RegisterXRay<ICoreAmazonS3>();
+            try
+            {
+                return AWSXRayRecorder.Instance.TraceMethod("Handling Request", handler);
+            }
+            catch (GCUException e)
+            {
+                return ResponseHelper.WrapResponse(e.Message, 400);
+            }
+            catch (Exception e)
+            {
+                return ResponseHelper.WrapResponse($"Unexpected Exception : {e.Message}", 500);
+            }
+        }
+
         protected static void Log(string message)
         {
             Console.WriteLine(message);

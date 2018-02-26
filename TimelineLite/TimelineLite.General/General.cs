@@ -22,6 +22,11 @@ namespace TimelineLite.General
             return Handle(() => GetAllTimelinesAndTimelineEvents(request));
         }
 
+        public APIGatewayProxyResponse GetOptions(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            return Handle(() => GetOptionsResponse(request));
+        }
+
         #region Private Methods
 
         private static APIGatewayProxyResponse GetAllTimelinesAndTimelineEvents(APIGatewayProxyRequest request)
@@ -46,12 +51,32 @@ namespace TimelineLite.General
             return ResponseHelper.WrapResponse(response);
         }
 
+        private static APIGatewayProxyResponse GetOptionsResponse(APIGatewayProxyRequest request)
+        {
+            var response = new APIGatewayProxyResponse
+            {
+                Headers = new Dictionary<string, string>
+                {
+                    {"Access-Control-Allow-Origin", "*"},
+                    {"Access-Control-Allow-Methods", "GET,PUT,OPTIONS"},
+                    {
+                        "Access-Control-Allow-Headers",
+                        "Content-Type,X-mz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,,AuthToken,authtoken,TenantId,tenantid,timelineid,TimelineId,TimelineEventId,timelineeventid,AttachmentId,attachmentid"
+                    },
+                    {"Content-Type", "application/json"}
+                },
+                StatusCode = 200
+            };
+            return response;
+        }
+
         private static List<Responses.TimelineEvent> GetTimelineEvents(IEnumerable<string> timelineEventIds, DynamoDbTimelineEventRepository eventRepo)
         {
             return timelineEventIds.Select(eventRepo.GetTimelineEventModel)
                 .Select(timelineEventModel => new Responses.TimelineEvent
                 {
                     Id = timelineEventModel.Id,
+                    Title = timelineEventModel.Title,
                     Description = timelineEventModel.Description,
                     EventDateTime = timelineEventModel.EventDateTime,
                     IsDeleted = timelineEventModel.IsDeleted,

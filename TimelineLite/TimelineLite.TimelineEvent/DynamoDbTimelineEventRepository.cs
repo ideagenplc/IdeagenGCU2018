@@ -34,6 +34,15 @@ namespace TimelineLite.TimelineEvent
             return model;
         }
 
+        public IEnumerable<TimelineEventModel> GetAllTimelineEventModels()
+        {
+            var table = Context.GetTargetTable<TimelineEventModel>();
+            var filter = CreateBaseQueryFilter();
+            var config = CreateQueryConfiguration(filter);
+            var search = table.Query(config);
+            return Context.FromDocuments<TimelineEventModel>(search.GetRemainingAsync().Result);
+        }
+
         public void SaveTimelineEventModel(TimelineEventModel model)
         {
             model.TenantId = TenantId;
