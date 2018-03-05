@@ -93,7 +93,7 @@ namespace TimelineLite.Timeline
             model.Title = editTimelineTitleRequest.Title;
             repo.SaveModel(model);
 
-            return ResponseHelper.WrapResponse($"{JsonConvert.SerializeObject(model)}");
+            return ResponseHelper.WrapResponse(model);
         }
 
         private static APIGatewayProxyResponse DeleteTimeline(APIGatewayProxyRequest request)

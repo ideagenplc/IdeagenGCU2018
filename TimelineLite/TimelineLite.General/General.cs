@@ -9,6 +9,7 @@ using Timelinelite.Core;
 using TimelineLite.General.Responses;
 using TimelineLite.Timeline;
 using TimelineLite.TimelineEvent;
+using TimelineLite.TimelineEventAttachment;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -34,6 +35,7 @@ namespace TimelineLite.General
             var tenantId = request.AuthoriseGetRequest();
             var timelineRepo = GetTimelineRepository(tenantId);
             var timelineEventRepo = GetTimelineEventRepository(tenantId);
+            var attachmentRepo = GetAttachmentRepository(tenantId);
             var timelineModels = timelineRepo.GetModels();
             var response = new GetAllTimelinesAndEventsResponse();
             foreach (var timelineModel in timelineModels)
@@ -44,7 +46,7 @@ namespace TimelineLite.General
                     CreationTimeStamp = timelineModel.CreationTimeStamp,
                     IsDeleted = timelineModel.IsDeleted,
                     Title = timelineModel.Title,
-                    TimelineEvents = GetTimelineEvents(timelineRepo.GetLinkedEvents(timelineModel.Id).Select(_ => _.TimelineEventId), timelineEventRepo)
+                    TimelineEvents = GetTimelineEvents(timelineRepo.GetLinkedEvents(timelineModel.Id).Select(_ => _.TimelineEventId), timelineEventRepo, attachmentRepo)
                 });
             }
 
@@ -70,7 +72,7 @@ namespace TimelineLite.General
             return response;
         }
 
-        private static List<Responses.TimelineEvent> GetTimelineEvents(IEnumerable<string> timelineEventIds, DynamoDbTimelineEventRepository eventRepo)
+        private static List<Responses.TimelineEvent> GetTimelineEvents(IEnumerable<string> timelineEventIds, DynamoDbTimelineEventRepository eventRepo, DynamoDbTimelineEventAttachmentRepository attachmentRepo)
         {
             return timelineEventIds.Select(eventRepo.GetTimelineEventModel)
                 .Select(timelineEventModel => new Responses.TimelineEvent
@@ -81,13 +83,25 @@ namespace TimelineLite.General
                     EventDateTime = timelineEventModel.EventDateTime,
                     IsDeleted = timelineEventModel.IsDeleted,
                     Location = timelineEventModel.Location,
-                    LinkedTimelineEventIds = GetLinkedTimelineEvents(timelineEventModel.Id, eventRepo)
+                    LinkedTimelineEventIds = GetLinkedTimelineEvents(timelineEventModel.Id, eventRepo),
+                    Attachments = GetAttachments(timelineEventModel.Id, attachmentRepo)
                 }).ToList();
         }
 
         private static List<string> GetLinkedTimelineEvents(string timelineEventId, DynamoDbTimelineEventRepository eventRepo)
         {
             return eventRepo.GetTimelineEventLinks(timelineEventId).Select(_ => _.LinkedToTimelineEventId).ToList();
+        }
+
+        private static List<Attachment> GetAttachments(string timelineEventId, DynamoDbTimelineEventAttachmentRepository attachmentRepo)
+        {
+            return attachmentRepo.GetTimelineEventAttachments(timelineEventId).Select(model => new Attachment
+            {
+                Id = model.Id,
+                IsDeleted = model.IsDeleted,
+                TimelineEventId = model.TimelineEventId,
+                Title = model.Title
+            }).ToList();
         }
 
         private static DynamoDbTimelineRepository GetTimelineRepository(string tenantId)
@@ -100,6 +114,10 @@ namespace TimelineLite.General
             return new DynamoDbTimelineEventRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), tenantId);
         }
 
+        private static DynamoDbTimelineEventAttachmentRepository GetAttachmentRepository(string tenantId)
+        {
+            return new DynamoDbTimelineEventAttachmentRepository(new AmazonDynamoDBClient(RegionEndpoint.EUWest1), tenantId);
+        }
         #endregion
     }
 }

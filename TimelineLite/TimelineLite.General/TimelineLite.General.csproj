@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Timelinelite.Core\Timelinelite.Core.csproj" />
+    <ProjectReference Include="..\TimelineLite.TimelineEventAttachment\TimelineLite.TimelineEventAttachment.csproj" />
     <ProjectReference Include="..\TimelineLite.TimelineEvent\TimelineLite.TimelineEvent.csproj" />
     <ProjectReference Include="..\TimelineLite.Timeline\TimelineLite.Timeline.csproj" />
   </ItemGroup>

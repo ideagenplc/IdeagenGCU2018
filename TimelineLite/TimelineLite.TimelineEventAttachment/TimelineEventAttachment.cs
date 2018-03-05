@@ -118,7 +118,7 @@ namespace TimelineLite.TimelineEventAttachment
             var tenantId = request.AuthoriseGetRequest();
             request.TryGetHeader("TimelineEventId", out var timelineEventId);
             ValidateTimelineEventAttachmentId(timelineEventId);
-            var models = GetRepo(tenantId).GetTimelineEventLinks(timelineEventId);
+            var models = GetRepo(tenantId).GetTimelineEventAttachments(timelineEventId);
             return ResponseHelper.WrapResponse(models);
         }
 
