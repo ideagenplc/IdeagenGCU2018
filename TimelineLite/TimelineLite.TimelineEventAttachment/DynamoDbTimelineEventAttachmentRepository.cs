@@ -11,7 +11,6 @@ namespace TimelineLite.TimelineEventAttachment
 
         public DynamoDbTimelineEventAttachmentRepository(IAmazonDynamoDB client, string tenantId) : base(tenantId, client)
         {
-            ;
         }
 
         public void CreateTimlineEventAttachment(TimelineEventAttachmentModel model)
