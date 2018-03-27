@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Amazon.Runtime.Internal;
 using Timelinelite.Core;
 
 namespace TimelineLite.General.Responses
@@ -31,6 +32,7 @@ namespace TimelineLite.General.Responses
         public TimelineEvent()
         {
             LinkedTimelineEventIds = new List<string>();
+            Attachments = new List<Attachment>();
         }
         public string Id { get; set; }
         public string Title { get; set; }
@@ -39,5 +41,14 @@ namespace TimelineLite.General.Responses
         public bool IsDeleted { get; set; }
         public string Location { get; set; }
         public List<string> LinkedTimelineEventIds { get; set; }
+        public List<Attachment> Attachments { get; set; }
+    }
+
+    public class Attachment
+    {
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string TimelineEventId { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

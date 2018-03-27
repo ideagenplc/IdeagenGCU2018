@@ -10,17 +10,18 @@ namespace TimelineLite.TimelineEventAttachment
     {
 
         public DynamoDbTimelineEventAttachmentRepository(IAmazonDynamoDB client, string tenantId) : base(tenantId, client)
-        {;
+        {
         }
 
         public void CreateTimlineEventAttachment(TimelineEventAttachmentModel model)
-        { 
+        {
             model.TenantId = TenantId;
             Context.SaveAsync(model).Wait();
         }
 
         public TimelineEventAttachmentModel GetModel(string id)
-        {var table = Context.GetTargetTable<TimelineEventAttachmentModel>();
+        {
+            var table = Context.GetTargetTable<TimelineEventAttachmentModel>();
             var filter = CreateBaseQueryFilter();
             filter.AddCondition(nameof(TimelineEventAttachmentModel.Id), QueryOperator.Equal, id);
             var config = CreateQueryConfiguration(filter);
@@ -31,7 +32,7 @@ namespace TimelineLite.TimelineEventAttachment
             return model;
         }
 
-        public IEnumerable<TimelineEventAttachmentModel> GetTimelineEventLinks(string timelineEventId)
+        public IEnumerable<TimelineEventAttachmentModel> GetTimelineEventAttachments(string timelineEventId)
         {
             var timelineEventLinkTable = Context.GetTargetTable<TimelineEventAttachmentModel>();
             var filter = CreateBaseQueryFilter();
@@ -45,7 +46,7 @@ namespace TimelineLite.TimelineEventAttachment
 
         public void SaveModel(TimelineEventAttachmentModel model)
         {
-            Context.SaveAsync(model).Wait();;
+            Context.SaveAsync(model).Wait(); ;
         }
         public void DeleteModel(TimelineEventAttachmentModel model)
         {
