@@ -126,7 +126,7 @@ namespace ExampleS3Upload
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
-                return JsonConvert.DeserializeObject(reader.ReadToEnd()).ToString();
+                return reader.ReadToEnd();
             }
         }
 
@@ -137,7 +137,7 @@ namespace ExampleS3Upload
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
-                return JsonConvert.DeserializeObject(reader.ReadToEnd()).ToString();
+                return reader.ReadToEnd();
             }
         }
 
